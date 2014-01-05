@@ -102,6 +102,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         // TODO config dir
         _logger = new OrchidLogHandler(_context);
         _client = new TorClient();
+        _client.getConfig().setDataDirectory(_configDir);
         _client.addInitializationListener(this);
         _client.start();
         if (_mgr != null)

@@ -21,6 +21,7 @@ public class OrchidLogHandler extends Handler {
         Logger base = Logger.getLogger("com.subgraph.orchid");
         base.addHandler(this);
         base.setUseParentHandlers(false);
+        base.setLevel(Level.FINE);
     }
 
     public void close() {
