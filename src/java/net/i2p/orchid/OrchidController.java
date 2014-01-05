@@ -54,6 +54,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     private final ClientAppManager _mgr;
     private final File _configDir;
     private TorClient _client;
+    private OrchidLogHandler _logger;
 
     private static final String DEFAULT_CONFIG_DIR = ".orchid";
     private static final String REGISTERED_NAME = "orchid";
@@ -79,7 +80,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         else
             throw new IllegalArgumentException("Usage: OrchidController [configDir]");
         _state = INITIALIZED;
-    }
+    }		
 
     public void initializationProgress(String message, int percent) {
         _log.warn(message + ' ' + percent + '%');
@@ -94,9 +95,12 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
      *  ClientApp interface
      *  @throws IllegalArgumentException if unable to load config from file
      */
-    public void startup() {
+    public synchronized void startup() {
+        if (_state != INITIALIZED && _state != STOPPED)
+            throw new IllegalStateException();
         changeState(STARTING);
         // TODO config dir
+        _logger = new OrchidLogHandler(_context);
         _client = new TorClient();
         _client.addInitializationListener(this);
         _client.start();
@@ -178,6 +182,10 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         if (_client != null) {
             _client.stop();
             _client = null;
+        }
+        if (_logger != null) {
+            _logger.close();
+            _logger = null;
         }
         changeState(STOPPED);
     }
