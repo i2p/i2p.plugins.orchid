@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="i2psnark">
+    <property name="i2pbase" value="../../i2p.i2p.zzz.outproxy"/>
+    <property name="i2plib" value="${i2pbase}/build"/>
+    <property name="jettylib" value="${i2pbase}/apps/jetty/jettylib"/>
+    <path id="cp">
+        <pathelement path="${java.class.path}" />
+        <pathelement location="${i2plib}/i2p.jar" />
+        <pathelement location="${ant.home}/lib/ant.jar"/>
+        <pathelement location="${jettylib}/org.mortbay.jetty.jar"/>
+        <pathelement location="${jettylib}/jasper-runtime.jar" />
+        <pathelement location="${jettylib}/javax.servlet.jar" />
+        <pathelement location="${jettylib}/jetty-util.jar" />
+        <pathelement location="${jettylib}/jetty-xml.jar" />
+        <pathelement location="${jettylib}/commons-logging.jar" />
+        <pathelement location="${jettylib}/commons-el.jar" />
+        <pathelement location="../lib/xmlrpc-client-${xmlrpc.version}.jar" />
+        <pathelement location="../lib/xmlrpc-common-${xmlrpc.version}.jar" />
+    </path>
+
+    <target name="all" depends="clean, build" />
+    <target name="build" depends="jar, war" />
+    <target name="builddep">
+    </target>
+
+    <property name="javac.compilerargs" value="" />
+
+    <target name="compile">
+        <mkdir dir="./build" />
+        <mkdir dir="./build/obj" />
+        <javac 
+            srcdir="./java" 
+            debug="true" deprecation="on" source="1.5" target="1.5" 
+            destdir="./build/obj" 
+            includeAntRuntime="false"
+            classpath="${i2plib}/i2p.jar:${i2plib}/i2ptunnel.jar:${i2plib}/i2psnark.jar:${i2plib}/mstreaming.jar:${i2plib}/systray.jar:${jettylib}/org.mortbay.jetty.jar:${jettylib}/jetty-util.jar:${jettylib}/jetty-xml.jar:../lib/xmlrpc-client-${xmlrpc.version}.jar:../lib/xmlrpc-common-${xmlrpc.version}.jar" >
+            <compilerarg line="${javac.compilerargs}" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="builddep, compile">
+        <jar destfile="build/orchid.jar" basedir="./build/obj" includes="**/*.class" >
+        </jar>
+    </target>    
+
+    <target name="precompilejsp" depends="compile" >
+        <mkdir dir="build" />
+        <mkdir dir="build/war/WEB-INF/classes" />
+        <path id="jspcp">
+            <path refid="cp" />
+            <pathelement location="build/obj" />
+        </path>
+        <java classname="org.apache.jasper.JspC" fork="true" classpathref="jspcp" failonerror="true">
+            <arg value="-d" />
+            <arg value="build/jspjava" />
+            <arg value="-v" />
+            <arg value="-p" />
+            <arg value="net.i2p.orchid" />
+            <arg value="-webinc" />
+            <arg value="build/web-fragment.xml" />
+            <arg value="-webapp" />
+            <arg value="jsp/" />
+        </java>
+
+        <javac
+            debug="true"
+            deprecation="on"
+            source="1.5" target="1.5" 
+            destdir="build/war/WEB-INF/classes"
+            srcdir="./build/jspjava"
+            includes="**/*.java"
+            includeAntRuntime="false"
+            classpathref="jspcp"
+            failonerror="true" />
+
+        <copy file="jsp/WEB-INF/web.xml" tofile="build/web.xml" />
+        <loadfile property="jspc.web.fragment" srcfile="build/web-fragment.xml" />
+        <replace file="build/web.xml">
+            <replacefilter token="&lt;!-- precompiled servlets --&gt;" value="${jspc.web.fragment}" />
+        </replace>
+
+    </target>
+
+    <target name="war" depends="precompilejsp"> 
+        <copy file="jsp/index.html" todir="build/war" />
+        <war destfile="build/orchid.war.jar" webxml="build/web.xml">
+            <fileset dir="build/war" />
+        </war>
+    </target>
+    
+    <target name="clean">
+        <delete dir="./build" />
+    </target>
+
+    <target name="cleandep" depends="clean">
+    </target>
+    <target name="distclean" depends="clean">
+    </target>
+</project>

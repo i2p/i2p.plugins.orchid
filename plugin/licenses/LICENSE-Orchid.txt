@@ -1,0 +1,3 @@
+According to http://www.subgraph.com/orchid.html ,
+
+"Orchid is licensed under a three-clause BSD license."

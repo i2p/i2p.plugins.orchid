@@ -1,0 +1,3 @@
+I2P license: TBD
+
+Bundled software: see plugins/licenses
