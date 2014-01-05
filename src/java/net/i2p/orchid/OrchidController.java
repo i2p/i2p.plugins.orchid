@@ -185,7 +185,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     public Socket connect(String host, int port) throws IOException {
         if (host.equals("127.0.0.1") || host.equals("localhost") ||
             host.toLowerCase(Locale.US).endsWith(".i2p"))
-            throw new IOException("unsupported host " + hsot);
+            throw new IOException("unsupported host " + host);
         ClientAppState state = _state;
         if (state != RUNNING)
             throw new IOException("Cannot connect in state " + state);
