@@ -34,16 +34,6 @@
             <arg value="plugin/console/webapps/orchid.war.pack" />
             <arg value="src/build/orchid.war.jar" />
         </exec>
-        <exec executable="pack200" failonerror="true">
-            <arg value="-g" />
-            <arg value="plugin/lib/xmlrpc-client.jar.pack" />
-            <arg value="lib/xmlrpc-client-${xmlrpc.version}.jar" />
-        </exec>
-        <exec executable="pack200" failonerror="true">
-            <arg value="-g" />
-            <arg value="plugin/lib/xmlrpc-common.jar.pack" />
-            <arg value="lib/xmlrpc-common-${xmlrpc.version}.jar" />
-        </exec>
         <exec executable="scripts/makeplugin.sh" failonerror="true" >
             <arg value="plugin" />
         </exec>
@@ -53,6 +43,16 @@
         <copy file="scripts/plugin.config" todir="plugin/" overwrite="true" />
         <exec executable="echo" osfamily="unix" failonerror="true" output="plugin/plugin.config" append="true">
             <arg value="version=${release.number}-b${build.number}" />
+        </exec>
+        <exec executable="pack200" failonerror="true">
+            <arg value="-g" />
+            <arg value="plugin/lib/xmlrpc-client.jar.pack" />
+            <arg value="lib/xmlrpc-client-${xmlrpc.version}.jar" />
+        </exec>
+        <exec executable="pack200" failonerror="true">
+            <arg value="-g" />
+            <arg value="plugin/lib/xmlrpc-common.jar.pack" />
+            <arg value="lib/xmlrpc-common-${xmlrpc.version}.jar" />
         </exec>
         <exec executable="scripts/makeplugin.sh" failonerror="true" >
             <arg value="plugin" />
