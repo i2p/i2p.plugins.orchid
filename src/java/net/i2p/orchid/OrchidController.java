@@ -34,7 +34,6 @@ import net.i2p.data.DataHelper;
 import net.i2p.util.FileUtil;
 import net.i2p.util.I2PAppThread;
 import net.i2p.util.Log;
-import net.i2p.outproxy.Outproxy;
 
 /**
  * This handles the starting and stopping of an eepsite tunnel and jetty
@@ -57,7 +56,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     private OrchidLogHandler _logger;
 
     private static final String DEFAULT_CONFIG_DIR = ".orchid";
-    private static final String REGISTERED_NAME = "orchid";
+    private static final String REGISTERED_NAME = Outproxy.NAME;
 
 
     /**
@@ -83,12 +82,16 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     }		
 
     public void initializationProgress(String message, int percent) {
-        _log.warn(message + ' ' + percent + '%');
+        if (_log.shouldLog(Log.INFO))
+            _log.info(message + ' ' + percent + '%');
     }
 
     public void initializationCompleted() {
         changeState(RUNNING);
-        _context.registerOutproxy(this);
+        if (_mgr != null)
+            _mgr.register(this);
+        if (_log.shouldLog(Log.INFO))
+            _log.info("Orchid ready");
     }
 
     /**
@@ -99,6 +102,8 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         if (_state != INITIALIZED && _state != STOPPED)
             throw new IllegalStateException();
         changeState(STARTING);
+        if (_log.shouldLog(Log.INFO))
+            _log.info("Starting Orchid");
         // TODO config dir
         _logger = new OrchidLogHandler(_context);
         _client = new TorClient();
@@ -150,7 +155,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     }
 
     /**
-     *  Warning - destroys the singleton!
+     *
      */
     private class Shutdown implements Runnable {
         public void run() {
@@ -166,18 +171,14 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     }
 
     /**
-     *  Warning - destroys the singleton!
-     *  Caller must root a new context before calling instance() or main() again.
-     *  Agressively kill and null everything to reduce memory usage in the JVM
-     *  after stopping, and to recognize what must be reinitialized on restart (Android)
+     *  Stop everything
      */
     public synchronized void shutdown() {
         if (_state != STARTING && _state != RUNNING)
             return;
         changeState(STOPPING);
-        try {
-            _context.unregisterOutproxy(this);
-        } catch (IllegalStateException ise) {}
+        if (_log.shouldLog(Log.INFO))
+            _log.info("Stopping Orchid");
         if (_mgr != null)
             _mgr.unregister(this);
         if (_client != null) {
@@ -189,6 +190,8 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             _logger = null;
         }
         changeState(STOPPED);
+        if (_log.shouldLog(Log.INFO))
+            _log.info("Orchid stopped");
     }
 
     public Socket connect(String host, int port) throws IOException {
@@ -198,6 +201,8 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         ClientAppState state = _state;
         if (state != RUNNING)
             throw new IOException("Cannot connect in state " + state);
+        if (_log.shouldLog(Log.INFO))
+            _log.info("Connecting to " + host + ':' + port);
         try {
             return new TorStreamSocket(_client, host, port);
         } catch (IOException ioe) {
