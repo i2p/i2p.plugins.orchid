@@ -40,6 +40,7 @@
         <move file="orchid.xpi2p" tofile="orchid-update.xpi2p" overwrite="true" />
 
         <!-- make the install xpi2p -->
+        <copy file="scripts/orchid.config" todir="plugin/" overwrite="true" />
         <copy file="scripts/plugin.config" todir="plugin/" overwrite="true" />
         <exec executable="echo" osfamily="unix" failonerror="true" output="plugin/plugin.config" append="true">
             <arg value="version=${release.number}-b${build.number}" />
@@ -64,6 +65,7 @@
     <target name="clean" >
         <ant dir="src" target="clean" />
         <delete file="plugin/i2ptunnel.config" />
+        <delete file="plugin/orchid.config" />
         <delete file="plugin/plugin.config" />
         <delete file="plugin/lib/orchid.jar.pack" />
         <delete file="plugin/lib/xmlrpc-common.jar.pack" />

@@ -22,11 +22,18 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import com.subgraph.orchid.TorClient;
 import com.subgraph.orchid.TorConfig;
+import static com.subgraph.orchid.TorConfig.ConfigVarType.*;
+import com.subgraph.orchid.TorConfig.AutoBoolValue;
 import com.subgraph.orchid.TorInitializationListener;
+import com.subgraph.orchid.config.TorConfigBridgeLine;
+import com.subgraph.orchid.config.TorConfigInterval;
+import com.subgraph.orchid.config.TorConfigParser;
 import com.subgraph.orchid.dashboard.Dashboard;
 
 import net.i2p.I2PAppContext;
@@ -55,12 +62,13 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
     private final I2PAppContext _context;
     private final ClientAppManager _mgr;
     private final File _configDir;
+    private final File _configFile;
     private TorClient _client;
     private OrchidLogHandler _logger;
 
     private static final String DEFAULT_CONFIG_DIR = ".orchid";
     private static final String REGISTERED_NAME = Outproxy.NAME;
-
+    private static final String CONFIG_FILE = "orchid.config";
 
     /**
      *  Instantiation only. Caller must call startup().
@@ -81,6 +89,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             _configDir = new File(args[0], "data");
         else
             throw new IllegalArgumentException("Usage: OrchidController [configDir]");
+        _configFile = new File(_configDir.getParentFile(), CONFIG_FILE);
         _state = INITIALIZED;
     }		
 
@@ -111,6 +120,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         _logger = new OrchidLogHandler(_context);
         _client = new TorClient();
         _client.getConfig().setDataDirectory(_configDir);
+        loadConfig(_client.getConfig());
         _client.addInitializationListener(this);
         _client.start();
         if (_mgr != null)
@@ -222,11 +232,94 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             return _client.getConfig();
         // else load from file
         return null;
-   }
+    }
 
     public synchronized void saveConfig() {
         // ...
-   }
+    }
+
+    public synchronized void loadConfig(TorConfig tc) {
+        Properties p = new Properties();
+        try {
+            DataHelper.loadProps(p, _configFile);
+        } catch (IOException ioe) {
+            if (_log.shouldLog(Log.WARN))
+                _log.warn("error loading config file", ioe);
+            return;
+        }
+        if (_log.shouldLog(Log.INFO))
+            _log.info("Loading " + p.size() + " configuations");
+        TorConfigParser tcp = new TorConfigParser();
+        for (Map.Entry e : p.entrySet()) {
+            String k = (String) e.getKey();
+            String v = (String) e.getValue();
+            if (k.equals("bridges")) {
+                // unimplemented in parser, will throw IAE
+                List<TorConfigBridgeLine> list = (List<TorConfigBridgeLine>) tcp.parseValue(v, BRIDGE_LINE);
+                for (TorConfigBridgeLine tcbl : list) {
+                    tc.addBridge(tcbl.getAddress(), tcbl.getPort(), tcbl.getFingerprint());
+                }
+            } else if (k.equals("circuitBuildTimeout")) {
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                tc.setCircuitBuildTimeout(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
+            } else if (k.equals("circuitIdleTimeout")) {
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                tc.setCircuitIdleTimeout(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
+            } else if (k.equals("circuitStreamTimeout")) {
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                tc.setCircuitStreamTimeout(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
+            } else if (k.equals("clientRejectInternalAddress")) {
+                tc.setClientRejectInternalAddress((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("enforceDistinctSubnets")) {
+                tc.setEnforceDistinctSubnets((Boolean) tcp.parseValue(v, INTEGER));
+            } else if (k.equals("numEntryGuards")) {
+                tc.setNumEntryGuards((Integer) tcp.parseValue(v, INTEGER));
+            } else if (k.equals("entryNodes")) {
+                tc.setEntryNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+            } else if (k.equals("excludeExitNodes")) {
+                tc.setExcludeExitNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+            } else if (k.equals("excludeNodes")) {
+                tc.setExcludeNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+            } else if (k.equals("exitNodes")) {
+                tc.setExitNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+            } else if (k.equals("fascistFirewall")) {
+                tc.setFascistFirewall((Boolean) tcp.parseValue(v, INTEGER));
+            } else if (k.equals("firewallPorts")) {
+                tc.setFirewallPorts((List<Integer>) tcp.parseValue(v, PORTLIST));
+            } else if (k.equals("handshakeV2Enabled")) {
+                tc.setHandshakeV2Enabled((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("handshakeV3Enabled")) {
+                tc.setHandshakeV3Enabled((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("longLivedPorts")) {
+                tc.setLongLivedPorts((List<Integer>) tcp.parseValue(v, PORTLIST));
+            } else if (k.equals("maxCircuitDirtiness")) {
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                tc.setMaxCircuitDirtiness(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
+            } else if (k.equals("maxClientCircuitsPending")) {
+                tc.setMaxClientCircuitsPending((Integer) tcp.parseValue(v, INTEGER));
+            } else if (k.equals("newCircuitPeriod")) {
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                tc.setNewCircuitPeriod(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
+            } else if (k.equals("safeLogging")) {
+                tc.setSafeLogging((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("safeSocks")) {
+                tc.setSafeSocks((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("strictNodes")) {
+                tc.setStrictNodes((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("useBridges")) {
+                tc.setUseBridges((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else if (k.equals("useMicrodescriptors")) {
+                tc.setUseMicrodescriptors((AutoBoolValue) tcp.parseValue(v, AUTOBOOL));
+            } else if (k.equals("useNTorHandshake")) {
+                tc.setUseNTorHandshake((AutoBoolValue) tcp.parseValue(v, AUTOBOOL));
+            } else if (k.equals("warnUnsafeSocks")) {
+                tc.setWarnUnsafeSocks((Boolean) tcp.parseValue(v, BOOLEAN));
+            } else {
+                if (_log.shouldLog(Log.WARN))
+                    _log.warn("Unknown config entry " + k + " = " + v);
+            }
+        }
+    }
 
     public synchronized void renderStatusHTML(PrintWriter out) throws IOException {
         if (_client == null)
