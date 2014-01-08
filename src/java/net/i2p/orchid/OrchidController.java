@@ -18,6 +18,7 @@ package net.i2p.orchid;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +27,7 @@ import java.util.Properties;
 import com.subgraph.orchid.TorClient;
 import com.subgraph.orchid.TorConfig;
 import com.subgraph.orchid.TorInitializationListener;
+import com.subgraph.orchid.dashboard.Dashboard;
 
 import net.i2p.I2PAppContext;
 import net.i2p.app.*;
@@ -224,6 +226,13 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
 
     public synchronized void saveConfig() {
         // ...
+   }
+
+    public synchronized void renderStatusHTML(PrintWriter out) throws IOException {
+        if (_client == null)
+            return;
+        // can't get to TorConfig's Dashboard from here so make a new one
+        (new Dashboard()).renderComponent(out, 0xff, _client.getCircuitManager());
    }
 }
     

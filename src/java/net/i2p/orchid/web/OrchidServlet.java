@@ -120,7 +120,7 @@ public class OrchidServlet extends BasicServlet {
         out.write("</title>\n");
                                          
         out.write("</head>\n");
-        out.write("<body><div>");
+        out.write("<body><div><h3>Plugin Status</h3>");
         OrchidController c = _manager;
         if (c != null) {
             out.write("Status is: " + c.getState());
@@ -129,6 +129,10 @@ public class OrchidServlet extends BasicServlet {
                 out.write("<br>Registered? " + (cam.getRegisteredApp("outproxy") != null));
             else
                 out.write("<br>Not registered, no client manager");
+            out.write("<h3>Circuit Status</h3><pre>");
+            // not really in HTML for now
+            c.renderStatusHTML(out);
+            out.write("</pre>");
             TorConfig tc = c.getConfig();
             if (tc != null)
                 out.write(getHTMLConfig(tc));
