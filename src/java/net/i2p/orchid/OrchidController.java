@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import com.subgraph.orchid.TorClient;
+import com.subgraph.orchid.TorConfig;
 import com.subgraph.orchid.TorInitializationListener;
 
 import net.i2p.I2PAppContext;
@@ -213,5 +214,16 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             throw ioe;
         }
     }
+
+    public synchronized TorConfig getConfig() {
+        if (_client != null)
+            return _client.getConfig();
+        // else load from file
+        return null;
+   }
+
+    public synchronized void saveConfig() {
+        // ...
+   }
 }
     
