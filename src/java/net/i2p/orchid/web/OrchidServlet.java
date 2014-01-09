@@ -54,8 +54,22 @@ public class OrchidServlet extends BasicServlet {
      *  Wait for the ClientAppManager
      */
     private class Starter extends I2PAppThread {
+        public Starter() {
+            super("Orchid Starter");
+        }
+
         public void run() {
-            File f = new File(_context.getAppDir(), "plugins");
+            try {
+                run2();
+            } catch (Throwable t) {
+                // class problems, old router version, ...
+                _log.error("Unable to start Orchid", t);
+                _isRunning = false;
+            }
+        }
+
+        private void run2() {
+            File f = new File(_context.getConfigDir(), "plugins");
             f = new File(f, _contextName);
             String[] args = new String[] { f.toString() };
             while (_isRunning) {
