@@ -1,19 +1,8 @@
 package net.i2p.orchid;
 /*
- *  Copyright 2010 zzz (zzz@mail.i2p)
+ *  Copyright 2014 zzz (zzz@mail.i2p)
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ *  BSD License
  */
 
 import java.io.File;
@@ -46,13 +35,13 @@ import net.i2p.util.I2PAppThread;
 import net.i2p.util.Log;
 
 /**
- * This handles the starting and stopping of an eepsite tunnel and jetty
- * from a single static class so it can be called via clients.config.
+ * This handles the starting and stopping of Orchid itself.
  *
- * This makes installation of a new eepsite a turnkey operation -
- * the user is not required to configure a new tunnel in i2ptunnel manually.
+ * This is instantiated and started by the servlet to avoid class loader issues later.
+ * Starting from client.config caused class loader problems.
  *
- * Usage: ZzzOTController -d $PLUGIN [start|stop]
+ * We implement ClientApp so we may register with the ClientAppManager,
+ * as this is how i2ptunnel finds us.
  *
  * @author zzz
  */
