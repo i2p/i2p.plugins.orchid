@@ -106,12 +106,19 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         if (_log.shouldLog(Log.INFO))
             _log.info("Starting Orchid");
         // TODO config dir
-        _logger = new OrchidLogHandler(_context);
-        _client = new TorClient();
-        _client.getConfig().setDataDirectory(_configDir);
-        loadConfig(_client.getConfig());
-        _client.addInitializationListener(this);
-        _client.start();
+        try {
+            _logger = new OrchidLogHandler(_context);
+            _client = new TorClient();
+            _client.getConfig().setDataDirectory(_configDir);
+            loadConfig(_client.getConfig());
+            _client.addInitializationListener(this);
+            _client.start();
+        } catch (RuntimeException t) {
+            // TorException extends RuntimeException,
+            // unlimited strength policy files not installed
+            changeState(START_FAILED);
+            throw t;
+        }
         if (_mgr != null)
             _mgr.register(this);
             // RouterAppManager registers its own shutdown hook
@@ -314,6 +321,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         if (_client == null)
             return;
         // can't get to TorConfig's Dashboard from here so make a new one
+        // FIXME strip HTML
         (new Dashboard()).renderComponent(out, 0xff, _client.getCircuitManager());
    }
 }
