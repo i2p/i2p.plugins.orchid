@@ -45,6 +45,7 @@
             <arg value="plugin" />
         </exec>
         <move file="orchid.xpi2p" tofile="orchid-update.xpi2p" overwrite="true" />
+        <move file="orchid.su3" tofile="orchid-update.su3" overwrite="true" />
 
         <!-- make the install xpi2p -->
         <copy file="scripts/orchid.config" todir="plugin/" overwrite="true" />
