@@ -116,7 +116,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         } catch (RuntimeException t) {
             // TorException extends RuntimeException,
             // unlimited strength policy files not installed
-            changeState(START_FAILED);
+            changeState(START_FAILED, t);
             throw t;
         }
         if (_mgr != null)

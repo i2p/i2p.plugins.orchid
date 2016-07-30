@@ -1,0 +1,23 @@
+* 2016-07-30 1.0.0-0.5
+  - Update hardcoded dirauths
+  - Add su3 plugin build support
+
+* 2014-03-01 1.0.0-0.4
+  - Catch policy exception to correctly set failed state (ticket #1201)
+  - Hopefully fix deadlock (ticket #1207)
+
+* 2014-01-10 1.0.0-0.3
+  - Better logging of startup errors
+  - Add config file support
+  - Add circuit status to servlet
+
+* 2014-01-08 1.0.0-0.2
+  - Change from jsp to java servlet
+  - Start controller from servlet, not clients.config, to avoid class loader issues
+  - Fix webapps.config location
+  - Fix console link
+  - Fix classpath issues
+  - Add status info using TorConfig
+
+* 2014-01-04 1.0.0-0.1
+  - Initial checkin

@@ -12,7 +12,7 @@
     <target name="plugin" depends="war"> 
         <!-- get version number -->
         <buildnumber file="scripts/build.number" />
-        <property name="release.number" value="1.0.0-0.4" />
+        <property name="release.number" value="1.0.0-0.5" />
 
         <!-- make the update xpi2p -->
         <copy file="LICENSE.txt" todir="plugin/" overwrite="true" />
@@ -34,7 +34,14 @@
             <arg value="plugin/console/webapps/orchid.war.pack" />
             <arg value="src/build/orchid.war.jar" />
         </exec>
-        <exec executable="scripts/makeplugin.sh" failonerror="true" >
+        <input message="Enter su3 signing key password:" addproperty="release.password.su3" />
+        <fail message="You must enter a password." >
+            <condition>
+                <equals arg1="${release.password.su3}" arg2=""/>
+            </condition>
+        </fail>
+        <!-- this will fail if no su3 keys exist, as it needs the password twice -->
+        <exec executable="scripts/makeplugin.sh" inputstring="${release.password.su3}" failonerror="true" >
             <arg value="plugin" />
         </exec>
         <move file="orchid.xpi2p" tofile="orchid-update.xpi2p" overwrite="true" />
@@ -55,7 +62,7 @@
             <arg value="plugin/lib/xmlrpc-common.jar.pack" />
             <arg value="lib/xmlrpc-common-${xmlrpc.version}.jar" />
         </exec>
-        <exec executable="scripts/makeplugin.sh" failonerror="true" >
+        <exec executable="scripts/makeplugin.sh" inputstring="${release.password.su3}" failonerror="true" >
             <arg value="plugin" />
         </exec>
     </target>
@@ -75,6 +82,8 @@
         <delete file="plugin/README.txt" />
         <delete file="orchid.xpi2p" />
         <delete file="orchid-update.xpi2p" />
+        <delete file="orchid.su3" />
+        <delete file="orchid-update.su3" />
     </target>
 
 </project>
