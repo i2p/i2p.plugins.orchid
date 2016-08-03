@@ -117,10 +117,6 @@ public class TorClient {
 		return circuitManager;
 	}
 
-	public DirectoryDownloader getDirectoryDownloader() {
-		return directoryDownloader;
-	}
-
 	public void waitUntilReady() throws InterruptedException {
 		readyLatch.await();
 	}

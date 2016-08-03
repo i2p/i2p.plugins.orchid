@@ -6,29 +6,29 @@ import java.util.List;
 
 import com.subgraph.orchid.TorConfig;
 import com.subgraph.orchid.TorConfig.AutoBoolValue;
-import com.subgraph.orchid.TorConfig.ConfigVarType;
+//import com.subgraph.orchid.TorConfig.ConfigVarType;
 
 public class TorConfigParser {
 	
-	public Object parseValue(String value, ConfigVarType type) {
+	public Object parseValue(String value, String type) {
 		switch(type) {
-		case BOOLEAN:
+		case "BOOLEAN":
 			return Boolean.parseBoolean(value);
-		case INTEGER:
+		case "INTEGER":
 			return Integer.parseInt(value);
-		case INTERVAL:
+		case "INTERVAL":
 			return parseIntervalValue(value);
-		case PATH:
+		case "PATH":
 			return parseFileValue(value);
-		case PORTLIST:
+		case "PORTLIST":
 			return parseIntegerList(value);
-		case STRING:
+		case "STRING":
 			return value;
-		case STRINGLIST:
+		case "STRINGLIST":
 			return parseCSV(value);
-		case AUTOBOOL:
+		case "AUTOBOOL":
 			return parseAutoBool(value);
-		case HS_AUTH:
+		case "HS_AUTH":
 		default:
 			throw new IllegalArgumentException();
 		}

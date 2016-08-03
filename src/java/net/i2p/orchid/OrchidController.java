@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.subgraph.orchid.TorClient;
 import com.subgraph.orchid.TorConfig;
-import static com.subgraph.orchid.TorConfig.ConfigVarType.*;
+// import static com.subgraph.orchid.TorConfig.ConfigVarType.*;
 import com.subgraph.orchid.TorConfig.AutoBoolValue;
 import com.subgraph.orchid.TorInitializationListener;
 import com.subgraph.orchid.config.TorConfigBridgeLine;
@@ -251,65 +252,65 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             String v = (String) e.getValue();
             if (k.equals("bridges")) {
                 // unimplemented in parser, will throw IAE
-                List<TorConfigBridgeLine> list = (List<TorConfigBridgeLine>) tcp.parseValue(v, BRIDGE_LINE);
+                List<TorConfigBridgeLine> list = (List<TorConfigBridgeLine>) tcp.parseValue(v, "BRIDGE_LINE");
                 for (TorConfigBridgeLine tcbl : list) {
                     tc.addBridge(tcbl.getAddress(), tcbl.getPort(), tcbl.getFingerprint());
                 }
             } else if (k.equals("circuitBuildTimeout")) {
-                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, "INTERVAL");
                 tc.setCircuitBuildTimeout(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
             } else if (k.equals("circuitIdleTimeout")) {
-                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, "INTERVAL");
                 tc.setCircuitIdleTimeout(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
             } else if (k.equals("circuitStreamTimeout")) {
-                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, "INTERVAL");
                 tc.setCircuitStreamTimeout(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
             } else if (k.equals("clientRejectInternalAddress")) {
-                tc.setClientRejectInternalAddress((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setClientRejectInternalAddress((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("enforceDistinctSubnets")) {
-                tc.setEnforceDistinctSubnets((Boolean) tcp.parseValue(v, INTEGER));
+                tc.setEnforceDistinctSubnets((Boolean) tcp.parseValue(v, "INTEGER"));
             } else if (k.equals("numEntryGuards")) {
-                tc.setNumEntryGuards((Integer) tcp.parseValue(v, INTEGER));
+                tc.setNumEntryGuards((Integer) tcp.parseValue(v, "INTEGER"));
             } else if (k.equals("entryNodes")) {
-                tc.setEntryNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+                tc.setEntryNodes((List<String>) tcp.parseValue(v, "STRINGLIST"));
             } else if (k.equals("excludeExitNodes")) {
-                tc.setExcludeExitNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+                tc.setExcludeExitNodes((List<String>) tcp.parseValue(v, "STRINGLIST"));
             } else if (k.equals("excludeNodes")) {
-                tc.setExcludeNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+                tc.setExcludeNodes((List<String>) tcp.parseValue(v, "STRINGLIST"));
             } else if (k.equals("exitNodes")) {
-                tc.setExitNodes((List<String>) tcp.parseValue(v, STRINGLIST));
+                tc.setExitNodes((List<String>) tcp.parseValue(v, "STRINGLIST"));
             } else if (k.equals("fascistFirewall")) {
-                tc.setFascistFirewall((Boolean) tcp.parseValue(v, INTEGER));
+                tc.setFascistFirewall((Boolean) tcp.parseValue(v, "INTEGER"));
             } else if (k.equals("firewallPorts")) {
-                tc.setFirewallPorts((List<Integer>) tcp.parseValue(v, PORTLIST));
+                tc.setFirewallPorts((List<Integer>) tcp.parseValue(v, "PORTLIST"));
             } else if (k.equals("handshakeV2Enabled")) {
-                tc.setHandshakeV2Enabled((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setHandshakeV2Enabled((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("handshakeV3Enabled")) {
-                tc.setHandshakeV3Enabled((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setHandshakeV3Enabled((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("longLivedPorts")) {
-                tc.setLongLivedPorts((List<Integer>) tcp.parseValue(v, PORTLIST));
+                tc.setLongLivedPorts((List<Integer>) tcp.parseValue(v, "PORTLIST"));
             } else if (k.equals("maxCircuitDirtiness")) {
-                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, "INTERVAL");
                 tc.setMaxCircuitDirtiness(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
             } else if (k.equals("maxClientCircuitsPending")) {
-                tc.setMaxClientCircuitsPending((Integer) tcp.parseValue(v, INTEGER));
+                tc.setMaxClientCircuitsPending((Integer) tcp.parseValue(v, "INTEGER"));
             } else if (k.equals("newCircuitPeriod")) {
-                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, INTERVAL);
+                TorConfigInterval tci = (TorConfigInterval) tcp.parseValue(v, "INTERVAL");
                 tc.setNewCircuitPeriod(tci.getMilliseconds(), TimeUnit.MILLISECONDS);
             } else if (k.equals("safeLogging")) {
-                tc.setSafeLogging((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setSafeLogging((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("safeSocks")) {
-                tc.setSafeSocks((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setSafeSocks((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("strictNodes")) {
-                tc.setStrictNodes((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setStrictNodes((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("useBridges")) {
-                tc.setUseBridges((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setUseBridges((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else if (k.equals("useMicrodescriptors")) {
-                tc.setUseMicrodescriptors((AutoBoolValue) tcp.parseValue(v, AUTOBOOL));
+                tc.setUseMicrodescriptors((AutoBoolValue) tcp.parseValue(v, "AUTOBOOL"));
             } else if (k.equals("useNTorHandshake")) {
-                tc.setUseNTorHandshake((AutoBoolValue) tcp.parseValue(v, AUTOBOOL));
+                tc.setUseNTorHandshake((AutoBoolValue) tcp.parseValue(v, "AUTOBOOL"));
             } else if (k.equals("warnUnsafeSocks")) {
-                tc.setWarnUnsafeSocks((Boolean) tcp.parseValue(v, BOOLEAN));
+                tc.setWarnUnsafeSocks((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else {
                 if (_log.shouldLog(Log.WARN))
                     _log.warn("Unknown config entry " + k + " = " + v);
