@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="all" name="i2psnark">
+<project basedir="." default="all" name="orchid">
     <property name="i2pbase" value="../../i2p.i2p"/>
     <property name="i2plib" value="${i2pbase}/build"/>
     <property name="jettylib" value="${i2pbase}/apps/jetty/jettylib"/>
@@ -21,13 +21,14 @@
     </target>
 
     <property name="javac.compilerargs" value="" />
+    <property name="javac.version" value="1.7" />
 
     <target name="compile">
         <mkdir dir="./build" />
         <mkdir dir="./build/obj" />
         <javac 
             srcdir="./java" 
-            debug="true" deprecation="on" source="1.5" target="1.5" 
+            debug="true" deprecation="on" source="${javac.version}" target="${javac.version}" 
             destdir="./build/obj" 
             includeAntRuntime="false"
             classpath="${i2plib}/i2p.jar:../lib/xmlrpc-client-${xmlrpc.version}.jar:../lib/xmlrpc-common-${xmlrpc.version}.jar:${jettylib}/javax.servlet.jar" >

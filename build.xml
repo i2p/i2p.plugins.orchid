@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project basedir="." default="all" name="orchid">
+    <property file="override.properties"/>
    
     <target name="all" depends="clean,plugin" />
 
