@@ -1,5 +1,6 @@
 package com.subgraph.orchid.directory;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -133,8 +134,20 @@ public class DirectoryImpl implements Directory {
 			loadCertificates(store.loadCacheFile(CacheFile.CERTIFICATES));
 			logElapsed();
 			
-			logger.info("Loading consensus");
-			loadConsensus(store.loadCacheFile(useMicrodescriptors ? CacheFile.CONSENSUS_MICRODESC : CacheFile.CONSENSUS));
+			//loadConsensus(store.loadCacheFile(useMicrodescriptors ? CacheFile.CONSENSUS_MICRODESC : CacheFile.CONSENSUS));
+			CacheFile consensusCacheFile = useMicrodescriptors ? CacheFile.CONSENSUS_MICRODESC : CacheFile.CONSENSUS;
+			File consensusFile = new File(config.getDataDirectory(), consensusCacheFile.getFilename());
+			long consensusDate = consensusFile.lastModified();
+			long age = System.currentTimeMillis() - consensusDate;
+			ByteBuffer consensus;
+			if (age < 7*24*60*60*1000L) {
+				logger.info("Loading consensus");
+				consensus = store.loadCacheFile(consensusCacheFile);
+			} else {
+				logger.info("Consensus not cached or too old");
+				consensus = ByteBuffer.allocate(0);
+			}
+			loadConsensus(consensus);
 			logElapsed();
 			
 			if(!useMicrodescriptors) {
