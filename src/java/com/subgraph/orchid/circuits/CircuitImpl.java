@@ -124,6 +124,11 @@ public abstract class CircuitImpl implements Circuit, DashboardRenderable {
 		return !status.isDirty();
 	}
 	
+	/** @since 1.2.2 */
+	public boolean isClosed() {
+		return status.isClosed();
+	}
+	
 	public int getSecondsDirty() {
 		return (int) (status.getMillisecondsDirty() / 1000);
 	}

@@ -47,14 +47,16 @@ public class HiddenServiceManager {
 	}
 	
 	private synchronized HiddenServiceCircuit getCircuitTo(HiddenService hs) throws OpenFailedException {
-		if(hs.getCircuit() == null) {
+		HiddenServiceCircuit rv = hs.getCircuit();
+		if(rv == null) {
 			final HiddenServiceCircuit c = openCircuitTo(hs);
 			if(c == null) {
 				throw new OpenFailedException("Failed to open circuit to "+ hs.getOnionAddressForLogging());
 			}
 			hs.setCircuit(c);
+			rv = c;
 		}
-		return hs.getCircuit();
+		return rv;
 	}
 	
 	private HiddenServiceCircuit openCircuitTo(HiddenService hs) throws OpenFailedException {

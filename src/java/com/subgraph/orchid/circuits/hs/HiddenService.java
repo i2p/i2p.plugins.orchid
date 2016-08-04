@@ -58,11 +58,16 @@ public class HiddenService {
 		this.descriptor = descriptor;
 	}
 
-	HiddenServiceCircuit getCircuit() {
+	/**
+	 *  As of 1.2.2, returns null if the previously set circuit is now closed.
+	 */
+	synchronized HiddenServiceCircuit getCircuit() {
+		if (circuit != null && circuit.isClosed())
+			circuit = null;
 		return circuit;
 	}
 	
-	void setCircuit(HiddenServiceCircuit circuit) {
+	synchronized void setCircuit(HiddenServiceCircuit circuit) {
 		this.circuit = circuit;
 	}
 	

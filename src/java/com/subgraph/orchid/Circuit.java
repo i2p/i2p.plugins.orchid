@@ -23,6 +23,9 @@ public interface Circuit {
 	boolean isClean();
 	
 	boolean isMarkedForClose();
+
+	/** @since 1.2.2 */
+	boolean isClosed();
 	
 	int getSecondsDirty();
 	

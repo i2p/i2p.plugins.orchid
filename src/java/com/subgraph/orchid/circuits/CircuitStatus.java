@@ -89,6 +89,11 @@ public class CircuitStatus {
 		return state == CircuitState.UNCONNECTED;
 	}
 
+	/** @since 1.2.2 */
+	boolean isClosed() {
+		return state == CircuitState.FAILED || state == CircuitState.DESTROYED;
+	}
+
 	String getStateAsString() {
 		if(state == CircuitState.OPEN) {
 			return state.toString() + " ["+ getDirtyString() + "]";
