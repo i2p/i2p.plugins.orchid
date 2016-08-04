@@ -24,6 +24,7 @@ import com.subgraph.orchid.ConnectionFailedException;
 import com.subgraph.orchid.ConnectionHandshakeException;
 import com.subgraph.orchid.ConnectionTimeoutException;
 import com.subgraph.orchid.Router;
+import com.subgraph.orchid.Threading;
 import com.subgraph.orchid.TorConfig;
 import com.subgraph.orchid.circuits.TorInitializationTracker;
 import com.subgraph.orchid.dashboard.DashboardRenderable;
@@ -65,7 +66,7 @@ public class ConnectionCacheImpl implements ConnectionCache, DashboardRenderable
 
 	private final ConcurrentMap<Router, Future<ConnectionImpl>> activeConnections = new ConcurrentHashMap<Router, Future<ConnectionImpl>>();
 	private final ConnectionSocketFactory factory = new ConnectionSocketFactory();
-	private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+	private final ScheduledExecutorService scheduledExecutor = Threading.newSingleThreadScheduledPool("Connection");
 
 	private final TorConfig config;
 	private final TorInitializationTracker initializationTracker;

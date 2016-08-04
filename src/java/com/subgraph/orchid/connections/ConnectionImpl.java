@@ -67,6 +67,7 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 	private final ReentrantLock circuitsLock = Threading.lock("circuits");
 	private final ReentrantLock outputLock = Threading.lock("output");
 	private final AtomicLong lastActivity = new AtomicLong();
+	private static final AtomicLong num = new AtomicLong();
 
 
 	public ConnectionImpl(TorConfig config, SSLSocket socket, Router router, TorInitializationTracker tracker, boolean isDirectoryConnection) {
@@ -74,12 +75,15 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 		this.socket = socket;
 		this.router = router;
 		this.circuitMap = new HashMap<Integer, Circuit>();
+		// TODO use thread pool from Threading?
 		this.readCellsThread = new Thread(createReadCellsRunnable());
 		this.readCellsThread.setDaemon(true);
+		this.readCellsThread.setName("ReadCells-" + num.getAndIncrement());
 		this.connectionControlCells = new LinkedBlockingQueue<Cell>();
 		this.initializationTracker = tracker;
 		this.isDirectoryConnection = isDirectoryConnection;
 		initializeCurrentCircuitId();
+		this.readCellsThread.setName("ConnectionImpl-" + num.getAndIncrement());
 	}
 	
 	private void initializeCurrentCircuitId() {

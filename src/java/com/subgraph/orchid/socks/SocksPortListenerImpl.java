@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import com.subgraph.orchid.CircuitManager;
 import com.subgraph.orchid.SocksPortListener;
+import com.subgraph.orchid.Threading;
 import com.subgraph.orchid.TorConfig;
 import com.subgraph.orchid.TorException;
 
@@ -28,7 +29,7 @@ public class SocksPortListenerImpl implements SocksPortListener {
 	public SocksPortListenerImpl(TorConfig config, CircuitManager circuitManager) {
 		this.config = config;
 		this.circuitManager = circuitManager;
-		executor = Executors.newCachedThreadPool();
+		executor = Threading.newPool("Socks");
 	}
 
 	public void addListeningPort(int port) {
