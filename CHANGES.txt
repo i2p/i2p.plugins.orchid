@@ -1,12 +1,13 @@
 * 2016-08-05 1.2.2-0.1
   - Don't load a consensus from disk that is too old
-  - Fix reopening HS circuit after close
+    (ticket #1220, orchid issue #24, bitcoinj issue #1064)
+  - Fix reopening HS circuit after close (ticket #1251)
   - Delay registration until initialization complete
   - HTTPConnection.getHost() fix
 
-* 2016-08-03 1.2.1-0.1
-  - Merge of bitcoinj changes, including deadlock fixes
-    and configuration rewrite
+* 2016-08-03 1.2.1-0.1 (unreleased)
+  - Merge of bitcoinj changes, including deadlock fixes (ticket #1207),
+    NPE fix (ticket #1221), and configuration rewrite
   - ConfigNodeFilter.createIdentityFilter() fix
 
 * 2016-07-30 1.0.0-0.5
