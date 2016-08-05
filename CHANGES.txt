@@ -1,5 +1,7 @@
-* 2016-08-xx 1.2.2-0.1
+* 2016-08-05 1.2.2-0.1
   - Don't load a consensus from disk that is too old
+  - Fix reopening HS circuit after close
+  - Delay registration until initialization complete
   - HTTPConnection.getHost() fix
 
 * 2016-08-03 1.2.1-0.1

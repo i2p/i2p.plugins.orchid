@@ -120,11 +120,13 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             changeState(START_FAILED, t);
             throw t;
         }
-        if (_mgr != null)
-            _mgr.register(this);
+        if (_mgr != null) {
+            // Don't register until initializationCompleted()
+            //_mgr.register(this);
             // RouterAppManager registers its own shutdown hook
-        else
+        } else {
             _context.addShutdownTask(new Shutdown());
+        }
     }
 
     /**
@@ -220,6 +222,8 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         } catch (Exception e) {
             IOException ioe = new IOException("connect error");
             ioe.initCause(e);
+            if (_log.shouldLog(Log.DEBUG))
+                _log.debug("Error Connecting to " + host + ':' + port, ioe);
             throw ioe;
         }
     }
