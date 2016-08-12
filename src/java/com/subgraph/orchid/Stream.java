@@ -26,6 +26,9 @@ public interface Stream {
 	 */
 	void close();
 
+	/** @since 1.2.2-0.2 */
+	boolean isClosed();
+
 	/**
 	 * Returns an {@link InputStream} for sending data on this stream.
 	 * 

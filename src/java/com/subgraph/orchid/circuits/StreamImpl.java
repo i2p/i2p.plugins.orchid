@@ -134,6 +134,11 @@ public class StreamImpl implements Stream, DashboardRenderable {
 		}
 	}
 
+	/** @since 1.2.2-0.2 */
+	public boolean isClosed() {
+		return isClosed;
+	}
+
 	public void openDirectory(long timeout) throws InterruptedException, TimeoutException, StreamConnectFailedException {
 		streamTarget = "[Directory]";
 		final RelayCell cell = new RelayCellImpl(circuit.getFinalCircuitNode(), circuit.getCircuitId(), streamId, RelayCell.RELAY_BEGIN_DIR);

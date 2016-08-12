@@ -13,7 +13,7 @@
     <target name="plugin" depends="war"> 
         <!-- get version number -->
         <buildnumber file="scripts/build.number" />
-        <property name="release.number" value="1.2.2-0.1" />
+        <property name="release.number" value="1.2.2-0.2" />
 
         <!-- make the update xpi2p -->
         <copy file="LICENSE.txt" todir="plugin/" overwrite="true" />

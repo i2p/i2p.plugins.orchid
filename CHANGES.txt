@@ -1,3 +1,9 @@
+* 2016-xx-xx 1.2.2-0.2
+  - Add Stream.isClosed()
+  - Implement more methods in TorStreamSocket
+  - Escape HTML on status page
+  - Fix HTML error on status page
+
 * 2016-08-05 1.2.2-0.1
   - Don't load a consensus from disk that is too old
     (ticket #1220, orchid issue #24, bitcoinj issue #1064)
