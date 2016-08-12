@@ -8,6 +8,7 @@ package net.i2p.orchid;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -326,8 +327,11 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         if (_client == null)
             return;
         // can't get to TorConfig's Dashboard from here so make a new one
-        // FIXME strip HTML
-        (new Dashboard()).renderComponent(out, 0xff, _client.getCircuitManager());
+        StringWriter sw = new StringWriter(1024);
+        PrintWriter pw = new PrintWriter(sw);
+        (new Dashboard()).renderComponent(pw, 0xff, _client.getCircuitManager());
+        pw.close();
+        out.write(DataHelper.escapeHTML(sw.toString()));
    }
 }
     

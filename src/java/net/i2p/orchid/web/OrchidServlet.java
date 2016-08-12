@@ -31,7 +31,7 @@ public class OrchidServlet extends BasicServlet {
     private static final String DEFAULT_NAME = "orchid";
     public static final String PROP_CONFIG_FILE = "orchid.configFile";
     private static final String DOCTYPE = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
-    private static final String FOOTER = "</div></center></body></html>";
+    private static final String FOOTER = "</div></body></html>";
     private static final String BUNDLE = "net.i2p.orchid.messages";
 
  
