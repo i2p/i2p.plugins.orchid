@@ -1,4 +1,4 @@
-* 2016-xx-xx 1.2.2-0.2
+* 2016-08-14 1.2.2-0.2
   - Add Stream.isClosed()
   - Implement more methods in TorStreamSocket
   - Escape HTML on status page
