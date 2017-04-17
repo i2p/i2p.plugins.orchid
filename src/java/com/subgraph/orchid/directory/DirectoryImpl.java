@@ -140,7 +140,7 @@ public class DirectoryImpl implements Directory {
 			long consensusDate = consensusFile.lastModified();
 			long age = System.currentTimeMillis() - consensusDate;
 			ByteBuffer consensus;
-			if (age < 7*24*60*60*1000L) {
+			if (age < 24*60*60*1000L) {
 				logger.info("Loading consensus");
 				consensus = store.loadCacheFile(consensusCacheFile);
 			} else {
