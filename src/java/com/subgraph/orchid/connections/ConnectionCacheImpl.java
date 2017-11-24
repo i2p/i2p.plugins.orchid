@@ -112,7 +112,9 @@ public class ConnectionCacheImpl implements ConnectionCache, DashboardRenderable
 
 	public Connection getConnectionTo(Router router, boolean isDirectoryConnection) throws InterruptedException, ConnectionTimeoutException, ConnectionFailedException, ConnectionHandshakeException {
 		if(isClosed) {
-			throw new IllegalStateException("ConnectionCache has been closed");
+			// I2P prevent logs at shutdown
+			//throw new IllegalStateException("ConnectionCache has been closed");
+			throw new ConnectionFailedException("ConnectionCache has been closed");
 		}
 		logger.fine("Get connection to "+ router.getAddress() + " "+ router.getOnionPort() + " " + router.getNickname());
 		while(true) {
