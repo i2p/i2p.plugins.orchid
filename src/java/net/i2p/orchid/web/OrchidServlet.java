@@ -130,7 +130,7 @@ public class OrchidServlet extends BasicServlet {
         out.write(DOCTYPE + "<html>\n" +
                   "<head>\n" +
                   "<title>");
-        out.write(_("Orchid Controller"));
+        out.write(_t("Orchid Controller"));
         out.write("</title>\n");
                                          
         out.write("</head>\n");
@@ -192,17 +192,17 @@ public class OrchidServlet extends BasicServlet {
     }
 
     /** translate */
-    private String _(String s) {
+    private String _t(String s) {
         return Translate.getString(s, _context, BUNDLE);
     }
 
     /** translate */
-    private String _(String s, Object o) {
+    private String _t(String s, Object o) {
         return Translate.getString(s, o, _context, BUNDLE);
     }
 
     /** translate */
-    private String _(String s, Object o, Object o2) {
+    private String _t(String s, Object o, Object o2) {
         return Translate.getString(s, o, o2, _context, BUNDLE);
     }
 
