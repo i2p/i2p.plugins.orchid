@@ -11,6 +11,7 @@
         <pathelement location="${jettylib}/javax.servlet.jar" />
         <pathelement location="${jettylib}/commons-logging.jar" />
         <pathelement location="${jettylib}/commons-el.jar" />
+        <pathelement location="${jettylib}/jetty-util.jar" />
         <pathelement location="../lib/xmlrpc-client-${xmlrpc.version}.jar" />
         <pathelement location="../lib/xmlrpc-common-${xmlrpc.version}.jar" />
     </path>
