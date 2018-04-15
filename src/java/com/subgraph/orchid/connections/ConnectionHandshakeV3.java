@@ -21,8 +21,7 @@ import com.subgraph.orchid.ConnectionIOException;
 
 public class ConnectionHandshakeV3 extends ConnectionHandshake {
 
-	private X509Certificate linkCertificate;
-	private X509Certificate identityCertificate;
+	private X509Certificate linkCertificate, identityCertificate, signing, tls, cross;
 	
 	ConnectionHandshakeV3(ConnectionImpl connection, SSLSocket socket) {
 		super(connection, socket);
@@ -40,12 +39,15 @@ public class ConnectionHandshakeV3 extends ConnectionHandshake {
 	void recvCerts() throws ConnectionHandshakeException  {
 		final Cell cell = expectCell(Cell.CERTS);
 		final int ncerts = cell.getByte();
-		if(ncerts != 2) {
-			throw new ConnectionHandshakeException("Expecting 2 certificates and got "+ ncerts);
+		if (ncerts != 2 && ncerts != 5) {
+			throw new ConnectionHandshakeException("Expecting 2 or 5 certificates and got "+ ncerts);
 		}
 
 		linkCertificate = null;
 		identityCertificate = null;
+		signing = null;
+		tls = null;
+		cross = null;
 		
 		for(int i = 0; i < ncerts; i++) {
 			int type = cell.getByte();
@@ -53,6 +55,12 @@ public class ConnectionHandshakeV3 extends ConnectionHandshake {
 				linkCertificate = testAndReadCertificate(cell, linkCertificate, "Link (type = 1)");
 			} else if(type == 2) {
 				identityCertificate = testAndReadCertificate(cell, identityCertificate, "Identity (type = 2)");
+			} else if(type == 4) {
+				signing = testAndReadCertificate(cell, signing, "Ed25519 signing key (type = 4)");
+			} else if(type == 5) {
+				tls = testAndReadCertificate(cell, tls, "TLS Link certificate (type = 5)");
+			} else if(type == 7) {
+				cross = testAndReadCertificate(cell, cross, "RSA Identity cross verification (type = 7)");
 			} else {
 				throw new ConnectionHandshakeException("Unexpected certificate type = "+ type + " in CERTS cell");
 			}
