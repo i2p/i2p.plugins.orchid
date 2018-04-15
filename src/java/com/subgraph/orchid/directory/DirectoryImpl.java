@@ -1,5 +1,4 @@
 package com.subgraph.orchid.directory;
-
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -138,7 +137,8 @@ public class DirectoryImpl implements Directory {
 			CacheFile consensusCacheFile = useMicrodescriptors ? CacheFile.CONSENSUS_MICRODESC : CacheFile.CONSENSUS;
 			File consensusFile = new File(config.getDataDirectory(), consensusCacheFile.getFilename());
 			long consensusDate = consensusFile.lastModified();
-			long age = System.currentTimeMillis() - consensusDate;
+			long now = System.currentTimeMillis();
+			long age = now - consensusDate;
 			ByteBuffer consensus;
 			if (age < 24*60*60*1000L) {
 				logger.info("Loading consensus");
@@ -150,6 +150,17 @@ public class DirectoryImpl implements Directory {
 			loadConsensus(consensus);
 			logElapsed();
 			
+			// shouldn't have to do this, but this is the easiest way to make it work
+			File f1 = new File(config.getDataDirectory(),
+			    (useMicrodescriptors ? CacheFile.MICRODESCRIPTOR_CACHE : CacheFile.DESCRIPTOR_CACHE).getFilename());
+			File f2 = new File(config.getDataDirectory(),
+			    (useMicrodescriptors ? CacheFile.MICRODESCRIPTOR_JOURNAL : CacheFile.DESCRIPTOR_JOURNAL).getFilename());
+			long m1 = f1.lastModified();
+			long m2 = f2.lastModified();
+			if (m1 > 0 && (now - m1) > 7*24*60*60*1000L)
+				f1.delete();
+			if (m2 > 0 && (now - m2) > 7*24*60*60*1000L)
+				f2.delete();
 			if(!useMicrodescriptors) {
 				logger.info("Loading descriptors");
 				basicDescriptorCache.initialLoad();
