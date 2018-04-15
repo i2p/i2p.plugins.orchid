@@ -1,3 +1,10 @@
+* 2018-05-xx 1.2.2-0.3
+  - Reduce max consensus age again (ticket #1220)
+  - Don't load a cached-microdesc from disk that is too old (ticket #1937)
+  - Update dirauths (ticket #2079)
+  - Fix spurious errors at shutdown (ticket #2079)
+  - Fix for certificate types (ticket #2079)
+
 * 2016-08-14 1.2.2-0.2
   - Add Stream.isClosed()
   - Implement more methods in TorStreamSocket
