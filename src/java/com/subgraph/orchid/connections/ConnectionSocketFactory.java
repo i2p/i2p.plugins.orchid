@@ -12,6 +12,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import net.i2p.util.I2PSSLSocketFactory;
+
 import com.subgraph.orchid.TorException;
 
 public class ConnectionSocketFactory {
@@ -66,7 +68,9 @@ public class ConnectionSocketFactory {
 	SSLSocket createSocket() {
 		try {
 			final SSLSocket socket = (SSLSocket) socketFactory.createSocket();
-			socket.setEnabledCipherSuites(MANDATORY_CIPHERS);
+			// Use I2P lib to blacklist weak protocols and ciphers
+			// We do not detect the the "Fixed Ciphersuite List", see tor-spec section 2.1
+			I2PSSLSocketFactory.setProtocolsAndCiphers(socket);
 			socket.setUseClientMode(true);
 			return socket;
 		} catch (IOException e) {

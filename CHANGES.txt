@@ -1,3 +1,6 @@
+* 2019-01-16 1.2.2-0.4
+  - Remove restrictive SSL cipher list which caused nothing to work (ticket #2079)
+
 * 2018-04-15 1.2.2-0.3
   - Reduce max consensus age again (ticket #1220)
   - Don't load a cached-microdesc from disk that is too old (ticket #1937)
