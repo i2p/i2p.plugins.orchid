@@ -4,8 +4,6 @@
    
     <target name="all" depends="clean,plugin" />
 
-    <property name="xmlrpc.version" value="3.1.3" />
-
     <target name="war" >
         <ant dir="src" target="build" />
     </target>
@@ -54,16 +52,6 @@
         <exec executable="echo" osfamily="unix" failonerror="true" output="plugin/plugin.config" append="true">
             <arg value="version=${release.number}-b${build.number}" />
         </exec>
-        <exec executable="pack200" failonerror="true">
-            <arg value="-g" />
-            <arg value="plugin/lib/xmlrpc-client.jar.pack" />
-            <arg value="lib/xmlrpc-client-${xmlrpc.version}.jar" />
-        </exec>
-        <exec executable="pack200" failonerror="true">
-            <arg value="-g" />
-            <arg value="plugin/lib/xmlrpc-common.jar.pack" />
-            <arg value="lib/xmlrpc-common-${xmlrpc.version}.jar" />
-        </exec>
         <exec executable="scripts/makeplugin.sh" inputstring="${release.password.su3}" failonerror="true" >
             <arg value="plugin" />
         </exec>
@@ -77,6 +65,7 @@
         <delete file="plugin/orchid.config" />
         <delete file="plugin/plugin.config" />
         <delete file="plugin/lib/orchid.jar.pack" />
+        <!-- following two removed in 0.5 -->
         <delete file="plugin/lib/xmlrpc-common.jar.pack" />
         <delete file="plugin/lib/xmlrpc-client.jar.pack" />
         <delete file="plugin/console/webapps/orchid.war.pack" />

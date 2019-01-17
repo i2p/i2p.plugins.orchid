@@ -6,14 +6,9 @@
     <path id="cp">
         <pathelement path="${java.class.path}" />
         <pathelement location="${i2plib}/i2p.jar" />
-        <pathelement location="${ant.home}/lib/ant.jar"/>
         <pathelement location="${jettylib}/jasper-runtime.jar" />
         <pathelement location="${jettylib}/javax.servlet.jar" />
-        <pathelement location="${jettylib}/commons-logging.jar" />
-        <pathelement location="${jettylib}/commons-el.jar" />
         <pathelement location="${jettylib}/jetty-util.jar" />
-        <pathelement location="../lib/xmlrpc-client-${xmlrpc.version}.jar" />
-        <pathelement location="../lib/xmlrpc-common-${xmlrpc.version}.jar" />
     </path>
 
     <target name="all" depends="clean, build" />
@@ -32,7 +27,7 @@
             debug="true" deprecation="on" source="${javac.version}" target="${javac.version}" 
             destdir="./build/obj" 
             includeAntRuntime="false"
-            classpath="${i2plib}/i2p.jar:../lib/xmlrpc-client-${xmlrpc.version}.jar:../lib/xmlrpc-common-${xmlrpc.version}.jar:${jettylib}/javax.servlet.jar" >
+            classpath="${i2plib}/i2p.jar:${jettylib}/javax.servlet.jar" >
             <compilerarg line="${javac.compilerargs}" />
         </javac>
     </target>
