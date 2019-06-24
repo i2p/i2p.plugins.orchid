@@ -129,8 +129,15 @@ public class DirectoryImpl implements Directory {
 			}
 			boolean useMicrodescriptors = config.getUseMicrodescriptors() != AutoBoolValue.FALSE;
 			last = System.currentTimeMillis();
-			logger.info("Loading certificates");
-			loadCertificates(store.loadCacheFile(CacheFile.CERTIFICATES));
+			// shouldn't have to do this, but this is the easiest way to make it work
+			File f0 = new File(config.getDataDirectory(), CacheFile.CERTIFICATES.getFilename());
+			long m0 = f0.lastModified();
+			if (m0 > 0 && (last - m0) > 60*24*60*60*1000L) {
+				logger.info("Certificates not cached or too old");
+			} else {
+				logger.info("Loading certificates");
+				loadCertificates(store.loadCacheFile(CacheFile.CERTIFICATES));
+			}
 			logElapsed();
 			
 			//loadConsensus(store.loadCacheFile(useMicrodescriptors ? CacheFile.CONSENSUS_MICRODESC : CacheFile.CONSENSUS));
@@ -157,9 +164,9 @@ public class DirectoryImpl implements Directory {
 			    (useMicrodescriptors ? CacheFile.MICRODESCRIPTOR_JOURNAL : CacheFile.DESCRIPTOR_JOURNAL).getFilename());
 			long m1 = f1.lastModified();
 			long m2 = f2.lastModified();
-			if (m1 > 0 && (now - m1) > 7*24*60*60*1000L)
+			if (m1 > 0 && (now - m1) > 2*24*60*60*1000L)
 				f1.delete();
-			if (m2 > 0 && (now - m2) > 7*24*60*60*1000L)
+			if (m2 > 0 && (now - m2) > 2*24*60*60*1000L)
 				f2.delete();
 			if(!useMicrodescriptors) {
 				logger.info("Loading descriptors");

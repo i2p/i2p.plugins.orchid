@@ -1,3 +1,8 @@
+* 2019-06-24 1.2.2-0.5
+  - Remove unused XMLRPC Transport and related libs
+  - Reduce max descriptor age
+  - Enforce max certificates file age
+
 * 2019-01-16 1.2.2-0.4
   - Remove restrictive SSL cipher list which caused nothing to work (ticket #2079)
 
