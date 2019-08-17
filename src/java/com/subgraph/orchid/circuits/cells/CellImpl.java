@@ -177,39 +177,39 @@ public class CellImpl implements Cell {
 	}
 
 	public String toString() {
-		return "Cell: circuit_id="+ circuitId +" command="+ command +" payload_len="+ cellBuffer.position();
+		return "Cell: CircuitID=" + circuitId +" Command=" + command +" PayloadLength=" + cellBuffer.position();
 	}
 
 	public static String errorToDescription(int errorCode) {
 		switch(errorCode) {
 		case ERROR_NONE:
-			return "No error reason given";
+			return "\n* Reason: No error reason given";
 		case ERROR_PROTOCOL:
-			return "Tor protocol violation";
+			return "\n* Reason: Tor protocol violation";
 		case ERROR_INTERNAL:
-			return "Internal error";
+			return "\n* Reason: Internal error";
 		case ERROR_REQUESTED:
-			return "Response to a TRUNCATE command sent from client";
+			return "\n* Reason: Response to a TRUNCATE command sent from client";
 		case ERROR_HIBERNATING:
-			return "Not currently operating; trying to save bandwidth.";
+			return "\n* Reason: Not currently operating; trying to save bandwidth.";
 		case ERROR_RESOURCELIMIT:
-			return "Out of memory, sockets, or circuit IDs.";
+			return "\n* Reason: Out of memory, sockets, or circuit IDs.";
 		case ERROR_CONNECTFAILED:
-			return "Unable to reach server.";
+			return "\n* Reason: Unable to reach server.";
 		case ERROR_OR_IDENTITY:
-			return "Connected to server, but its OR identity was not as expected.";
+			return "\n* Reason: Connected to server, but its OR identity was not as expected.";
 		case ERROR_OR_CONN_CLOSED:
-			return "The OR connection that was carrying this circuit died.";
+			return "\n* Reason: The OR connection that was carrying this circuit died.";
 		case ERROR_FINISHED:
-			return "The circuit has expired for being dirty or old.";
+			return "\n* Reason: The circuit has expired for being dirty or old.";
 		case ERROR_TIMEOUT:
-			return "Circuit construction took too long.";
+			return "\n* Reason: Circuit construction took too long.";
 		case ERROR_DESTROYED:
-			return "The circuit was destroyed without client TRUNCATE";
+			return "\n* Reason: The circuit was destroyed without client TRUNCATE";
 		case ERROR_NOSUCHSERVICE:
-			return "Request for unknown hidden service";
+			return "\n* Reason: Request for unknown hidden service";
 		default:
-			return "Error code "+ errorCode;
+			return "\n* Reason: Error code " + errorCode;
 		}
 	}
 }

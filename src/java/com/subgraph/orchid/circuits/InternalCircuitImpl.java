@@ -104,15 +104,15 @@ public class InternalCircuitImpl extends CircuitImpl implements InternalCircuit,
 	protected String getCircuitTypeLabel() {
 		switch(type) {
 		case HS_CIRCUIT:
-			return "Hidden Service";
+			return "<span class=\"hiddenservice\">Hidden Service</span>";
 		case HS_DIRECTORY:
-			return "HS Directory";
+			return "<span class=\"hiddenservice\">HS Directory</span>";
 		case HS_INTRODUCTION:
-			return "HS Introduction";
+			return "<span class=\"hiddenservice\">HS Introduction</span>";
 		case UNUSED:
-			return "Internal";
+			return "<span class=\"internal\">Internal</span>";
 		default:
-			return "(null)";
+			return "[null]";
 		}
 	}
 }

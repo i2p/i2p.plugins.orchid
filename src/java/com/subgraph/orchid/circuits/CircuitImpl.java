@@ -261,19 +261,81 @@ public abstract class CircuitImpl implements Circuit, DashboardRenderable {
 	protected abstract String getCircuitTypeLabel();
 	
 	public String toString() {
-		return "  Circuit ("+ getCircuitTypeLabel() + ") id="+ getCircuitId() +" state=" + status.getStateAsString() +" "+ pathToString();
+		return "<tr class=\"circuit\"><td title=\"Circuit ID\">" + getCircuitId() + "</td><td>" +
+				getCircuitTypeLabel() + "</td><td>" +
+				status.getStateAsString().replace("Open ", "").replace("[", "").replace("]", "") + "</td><td>" +
+//				"bandwidth usage stats here</td><td> -->" +
+				pathToString() + "</td></tr>";
 	}
 
-	
 	protected String pathToString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("[");
+		sb.append("<span class=\"circuitcontainer\">");
 		for(CircuitNode node: nodeList) {
+			Router r = node.getRouter();
 			if(sb.length() > 1)
-				sb.append(",");
-			sb.append(node.toString());
+				sb.append(" <span class=\"hidden\">-> </span>");
+			sb.append("<span class=\"nodecontainer\"><span class=\"hidden\">[</span><span class=\"node\" onclick=\"copyText();\"><span class=\"flag\" data-country=\"");
+			if (r != null) {
+				if (r.getCountryName() != null)
+					sb.append(r.getCountryName() + " (" + r.getAddress() + ")");
+				else
+					sb.append(r.getAddress());
+			} else {
+				sb.append("unknown");
 		}
-		sb.append("]");
+			sb.append("\">");
+			sb.append("<img height=\"11\" width=\"16\" src=\"/flags.jsp?c=");
+			if (r != null && r.getCountryName() != null)
+				sb.append(r.getCountryCode().toLowerCase().replace("--", "a0"));
+			else
+				sb.append("a0");
+			sb.append("\"></span>");
+			if (r != null) {
+				String idHash = r.getIdentityHash().toString().toUpperCase();
+				int uptime = r.getUptime();
+				int bw = r.getObservedBandwidth();
+				sb.append("<span class=\"nickname");
+				if (r.getPlatform() != null || r.getUptime() > 0 || r.getObservedBandwidth() > 0)
+					sb.append("\" data-ipv4=\"");
+
+				if (r.getPlatform() != null)
+					sb.append(r.getPlatform().replace("Tor ", "").replace(" on ", " / ").replace("-alpha-dev", "-alpha"));
+
+				if (uptime > 0 && bw > 0)
+					sb.append(" \u2022 ");
+				if (bw > 0 && bw < 1048576)
+					sb.append((bw / 1024) + " KB/s");
+				else if (bw >= 1048576)
+					sb.append(((bw / 1024) / 1024) + " MB/s");
+
+				if (uptime > 0)
+					sb.append(" \u2022 Up: ");
+				if (uptime > 172800)
+					sb.append((((uptime / 60) / 60) / 24) + " days");
+				else if (uptime > 1440)
+					sb.append(((uptime / 60) / 60) + " hours");
+				else if (uptime > 3600)
+					sb.append(uptime / 60 + " minutes");
+				else if (uptime > 0)
+					sb.append(uptime + " seconds");
+
+				sb.append("\">");
+
+				sb.append("<a class=\"script\" href=\"https://metrics.torproject.org/rs.html#search/" + idHash + "\" target=\"_blank\">" + node.toString() + "</a>");
+
+				// <noscript> alternative lookup
+				sb.append("<noscript>");
+				sb.append("<a href=\"https://torstatus.blutmagie.de/router_detail.php?FP=" + idHash + "\" target=\"_blank\">" + node.toString() + "</a>");
+				sb.append("</noscript>");
+
+				sb.append("</span><span class=\"hidden\"> (<b>" + r.getAddress() + "</b>)</span></span><span class=\"hidden\">]</span></span>");
+			} else {
+				sb.append("<span class=\"nickname unknown\"><i>unknown</i></span>");
+			sb.append("</span><span class=\"hidden\">]</span></span>");
+			}
+		}
+		sb.append("</span>");
 		return sb.toString();
 	}
 

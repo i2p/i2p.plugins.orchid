@@ -82,6 +82,6 @@ public class ExitCircuitImpl extends CircuitImpl implements ExitCircuit {
 	
 	@Override
 	protected String getCircuitTypeLabel() {
-		return "Exit";
+		return "<span class=\"exit\">Exit</span>";
 	}
 }

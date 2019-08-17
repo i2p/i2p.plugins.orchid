@@ -116,7 +116,7 @@ public class ConnectionCacheImpl implements ConnectionCache, DashboardRenderable
 			//throw new IllegalStateException("ConnectionCache has been closed");
 			throw new ConnectionFailedException("ConnectionCache has been closed");
 		}
-		logger.fine("Get connection to "+ router.getAddress() + " "+ router.getOnionPort() + " " + router.getNickname());
+		logger.fine("Connecting to [" + router.getNickname() + " (" + router.getAddress() + ":" + router.getOnionPort() +")]");
 		while(true) {
 			Future<ConnectionImpl> f = getFutureFor(router, isDirectoryConnection);
 			try {
@@ -168,23 +168,29 @@ public class ConnectionCacheImpl implements ConnectionCache, DashboardRenderable
 		if((flags & DASHBOARD_CONNECTIONS) == 0) {
 			return;
 		}
+		if (!getActiveConnections().isEmpty()) // not working.. conncache section should be displayed only when active circuits
+			writer.print("<tr><td>\n");
+		else
+			writer.print("<tr hidden><td>\n");
 		printDashboardBanner(writer, flags);
 		for(Connection c: getActiveConnections()) {
 			if(!c.isClosed()) {
 				renderer.renderComponent(writer, flags, c);
 			}
 		}
-		writer.println();
+		// close connection cache table
+		writer.print("</table>\n</td></tr>\n");
 	}
 
 	private void printDashboardBanner(PrintWriter writer, int flags) {
 		final boolean verbose = (flags & DASHBOARD_CONNECTIONS_VERBOSE) != 0;
-		if(verbose) {
-			writer.println("[Connection Cache (verbose)]");
-		} else {
-			writer.println("[Connection Cache]");
-		}
-		writer.println();
+		writer.print("<hr>\n<table id=\"conncache\" width=\"100%\">\n" +
+					 "<tr><th colspan=\"5\" align=\"left\">Connection Cache</th></tr>\n<tr class=\"subtitle\">" +
+					 "<th align=\"left\" width=\"25%\">Guard Node <span title=\"Circuits available for immediate use\">(Circuits)</span></th>" +
+					 "<th align=\"left\" width=\"25%\">Idle</th>" +
+					 "<th align=\"left\" width=\"25%\" title=\"Observed node bandwidth\">Bandwidth</th>" +
+					 "<th align=\"left\" width=\"25%\">Uptime</th>" +
+					 "</tr>\n");
 	}
 
 	List<Connection> getActiveConnections() {

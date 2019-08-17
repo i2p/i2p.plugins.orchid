@@ -11,6 +11,9 @@ public interface Router {
 	String getNickname();
 	String getCountryCode();
 	IPv4Address getAddress();
+	String getPlatform();
+	String getCountryName();
+	int getUptime();
 	int getOnionPort();
 	int getDirectoryPort();
 	TorPublicKey getIdentityKey();

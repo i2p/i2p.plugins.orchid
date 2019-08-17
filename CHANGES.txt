@@ -1,3 +1,15 @@
+* 2019-08-xx 1.2.2-0.6
+ - Overhaul front-end to use full html output and a default light theme
+ - Enable GeoIP lookups for nodes to permit display of flags
+ - Add country code lookups for nodes and display on tooltip
+ - Mitigate logging output issues caused by html output
+ - Set useMicroDescriptors to FALSE so additional node information can
+   be presented in the UI, if enough memory available
+ - Allow 2nd parameter in extra-info-digest when pulling full descriptors
+ - Display platform, observed bandwidth and uptime on circuit node tooltips
+ - Add hints and notes to config section, and include missing options
+ - Change maxCircuitDirtiness to Tor default of 10 minutes
+
 * 2019-06-24 1.2.2-0.5
   - Remove unused XMLRPC Transport and related libs
   - Reduce max descriptor age

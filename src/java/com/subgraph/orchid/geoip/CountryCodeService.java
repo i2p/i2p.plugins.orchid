@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 import com.subgraph.orchid.data.IPv4Address;
 
+import net.i2p.I2PAppContext;
+
 public class CountryCodeService {
 	private final static Logger logger = Logger.getLogger(CountryCodeService.class.getName());
 	private final static String DATABASE_FILENAME = "GeoIP.dat";
@@ -48,6 +50,71 @@ public class CountryCodeService {
 		"WS", "YE", "YT", "RS", "ZA", "ZM", "ME", "ZW", "A1", "A2", "O1",
 		"AX", "GG", "IM", "JE", "BL", "MF", "BQ", "SS", "O1" };
 	
+	private static final String[] COUNTRY_NAMES = { "N/A", "Asia/Pacific Region",
+		"Europe", "Andorra", "United Arab Emirates", "Afghanistan",
+		"Antigua and Barbuda", "Anguilla", "Albania", "Armenia", "Curacao",
+		"Angola", "Antarctica", "Argentina", "American Samoa", "Austria",
+		"Australia", "Aruba", "Azerbaijan", "Bosnia and Herzegovina",
+		"Barbados", "Bangladesh", "Belgium", "Burkina Faso", "Bulgaria",
+		"Bahrain", "Burundi", "Benin", "Bermuda", "Brunei Darussalam",
+		"Bolivia", "Brazil", "Bahamas", "Bhutan", "Bouvet Island",
+		"Botswana", "Belarus", "Belize", "Canada",
+		"Cocos (Keeling) Islands", "Congo, The Democratic Republic of the",
+		"Central African Republic", "Congo", "Switzerland",
+		"Cote D'Ivoire", "Cook Islands", "Chile", "Cameroon", "China",
+		"Colombia", "Costa Rica", "Cuba", "Cape Verde", "Christmas Island",
+		"Cyprus", "Czech Republic", "Germany", "Djibouti", "Denmark",
+		"Dominica", "Dominican Republic", "Algeria", "Ecuador", "Estonia",
+		"Egypt", "Western Sahara", "Eritrea", "Spain", "Ethiopia",
+		"Finland", "Fiji", "Falkland Islands (Malvinas)",
+		"Micronesia, Federated States of", "Faroe Islands", "France",
+		"Sint Maarten (Dutch part)", "Gabon", "United Kingdom", "Grenada",
+		"Georgia", "French Guiana", "Ghana", "Gibraltar", "Greenland",
+		"Gambia", "Guinea", "Guadeloupe", "Equatorial Guinea", "Greece",
+		"South Georgia and the South Sandwich Islands", "Guatemala",
+		"Guam", "Guinea-Bissau", "Guyana", "Hong Kong",
+		"Heard Island and McDonald Islands", "Honduras", "Croatia",
+		"Haiti", "Hungary", "Indonesia", "Ireland", "Israel", "India",
+		"British Indian Ocean Territory", "Iraq",
+		"Iran, Islamic Republic of", "Iceland", "Italy", "Jamaica",
+		"Jordan", "Japan", "Kenya", "Kyrgyzstan", "Cambodia", "Kiribati",
+		"Comoros", "Saint Kitts and Nevis",
+		"Korea, Democratic People's Republic of", "Korea, Republic of",
+		"Kuwait", "Cayman Islands", "Kazakhstan",
+		"Lao People's Democratic Republic", "Lebanon", "Saint Lucia",
+		"Liechtenstein", "Sri Lanka", "Liberia", "Lesotho", "Lithuania",
+		"Luxembourg", "Latvia", "Libya", "Morocco", "Monaco",
+		"Moldova, Republic of", "Madagascar", "Marshall Islands",
+		"Macedonia", "Mali", "Myanmar", "Mongolia", "Macau",
+		"Northern Mariana Islands", "Martinique", "Mauritania",
+		"Montserrat", "Malta", "Mauritius", "Maldives", "Malawi", "Mexico",
+		"Malaysia", "Mozambique", "Namibia", "New Caledonia", "Niger",
+		"Norfolk Island", "Nigeria", "Nicaragua", "Netherlands", "Norway",
+		"Nepal", "Nauru", "Niue", "New Zealand", "Oman", "Panama", "Peru",
+		"French Polynesia", "Papua New Guinea", "Philippines", "Pakistan",
+		"Poland", "Saint Pierre and Miquelon", "Pitcairn Islands",
+		"Puerto Rico", "Palestinian Territory", "Portugal", "Palau",
+		"Paraguay", "Qatar", "Reunion", "Romania", "Russian Federation",
+		"Rwanda", "Saudi Arabia", "Solomon Islands", "Seychelles", "Sudan",
+		"Sweden", "Singapore", "Saint Helena", "Slovenia",
+		"Svalbard and Jan Mayen", "Slovakia", "Sierra Leone", "San Marino",
+		"Senegal", "Somalia", "Suriname", "Sao Tome and Principe",
+		"El Salvador", "Syrian Arab Republic", "Swaziland",
+		"Turks and Caicos Islands", "Chad", "French Southern Territories",
+		"Togo", "Thailand", "Tajikistan", "Tokelau", "Turkmenistan",
+		"Tunisia", "Tonga", "Timor-Leste", "Turkey", "Trinidad and Tobago",
+		"Tuvalu", "Taiwan", "Tanzania, United Republic of", "Ukraine",
+		"Uganda", "United States Minor Outlying Islands", "United States",
+		"Uruguay", "Uzbekistan", "Holy See (Vatican City State)",
+		"Saint Vincent and the Grenadines", "Venezuela",
+		"Virgin Islands, British", "Virgin Islands, U.S.", "Vietnam",
+		"Vanuatu", "Wallis and Futuna", "Samoa", "Yemen", "Mayotte",
+		"Serbia", "South Africa", "Zambia", "Montenegro", "Zimbabwe",
+		"Anonymous Proxy", "Satellite Provider", "Other", "Aland Islands",
+		"Guernsey", "Isle of Man", "Jersey", "Saint Barthelemy",
+		"Saint Martin", "Bonaire, Saint Eustatius and Saba", "South Sudan",
+		"Other" };
+
 	private final byte[] database;
 
 	public CountryCodeService() {
@@ -56,9 +123,13 @@ public class CountryCodeService {
 	
 	private static byte[] loadDatabase() {
 		final InputStream input = openDatabaseStream();
+		final File dataDir = new File(I2PAppContext.getGlobalContext().getConfigDir(), "plugins/orchid/geoip");
+		final File dbFile = new File(dataDir, DATABASE_FILENAME);
 		if(input == null) {
-			logger.warning("Failed to open '"+ DATABASE_FILENAME + "' database file for country code lookups");
+			logger.warning("Failed to open '" + DATABASE_FILENAME + "' database file in " + dataDir + " for country code lookups");
 			return null;
+		} else {
+			logger.info("Loaded '" + dataDir + "/" + DATABASE_FILENAME + "' for country code lookups");
 		}
 		try {
 			return loadEntireStream(input);
@@ -82,7 +153,7 @@ public class CountryCodeService {
 	}
 
 	private static InputStream tryFilesystemOpen() {
-		final File dataDir = new File(System.getProperty("user.dir"), "data");
+		final File dataDir = new File(I2PAppContext.getGlobalContext().getConfigDir(), "plugins/orchid/geoip");
 		final File dbFile = new File(dataDir, DATABASE_FILENAME);
 		if(!dbFile.canRead()) {
 			return null;
@@ -95,7 +166,8 @@ public class CountryCodeService {
 	}
 	
 	private static InputStream tryResourceOpen() {
-		return CountryCodeService.class.getResourceAsStream("/data/"+ DATABASE_FILENAME);
+		final File dataDir = new File(I2PAppContext.getGlobalContext().getConfigDir(), "plugins/orchid/geoip");
+		return CountryCodeService.class.getResourceAsStream(dataDir + "/" + DATABASE_FILENAME);
 	}
 
 	private static byte[] loadEntireStream(InputStream input) throws IOException {
@@ -119,6 +191,10 @@ public class CountryCodeService {
 		return COUNTRY_CODES[seekCountry(address)];
 	}
 
+	public String getCountryNameForAddress(IPv4Address address) {
+		return COUNTRY_NAMES[seekCountry(address)];
+	}
+
 	private int seekCountry(IPv4Address address) {
 		if(database == null) {
 			return 0;
@@ -140,7 +216,7 @@ public class CountryCodeService {
 			if(xx >= COUNTRY_BEGIN) {
 				final int idx = xx - COUNTRY_BEGIN;
 				if(idx < 0 || idx > COUNTRY_CODES.length) {
-					logger.warning("Invalid index calculated looking up country code record for ("+ address +") idx = "+ idx);
+					logger.warning("Invalid index calculated looking up country code record for: [" + address + "] idx = " + idx);
 					return 0;
 				} else {
 					return idx;
@@ -150,7 +226,7 @@ public class CountryCodeService {
 			}
 			
 		}
-		logger.warning("No record found looking up country code record for ("+ address + ")");
+		logger.warning("No country code record found for: " + address);
 		return 0;
 	}
 

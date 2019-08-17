@@ -86,8 +86,8 @@ public class KeyCertificateImpl implements KeyCertificate {
 	}
 	
 	public String toString() {
-		return "(Certificate: address="+ directoryAddress +":"+ directoryPort 
-			+" fingerprint="+ fingerprint +" published="+ keyPublished +" expires="+ keyExpires +")"+
+		return "[Certificate: address=" + directoryAddress + ":" + directoryPort
+			+ " fingerprint=" + fingerprint + " published=" + keyPublished + " expires=" + keyExpires + "]" +
 			"\nident="+ identityKey +" sign="+ signingKey;
 	}
 }

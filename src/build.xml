@@ -78,9 +78,13 @@
     </target>
 
     <target name="war" depends="precompilejsp"> 
+        <!-- add css and resources -->
+        <copy todir="build/war/resources" overwrite="true" >
+            <fileset dir="../resources" />
+        </copy>
         <war destfile="build/orchid.war.jar" webxml="build/web.xml">
             <classes dir="./build/obj" includes="**/web/*" />
-            <fileset dir="build/war" />
+            <fileset dir="./build/war" />
         </war>
     </target>
     

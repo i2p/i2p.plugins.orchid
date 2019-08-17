@@ -1,0 +1,13 @@
+#configuration {
+    display: none !important;
+}
+
+#expand {
+    display: inline-block !important;
+    z-index: 100 !important;
+}
+
+#collapse {
+    display: none !important;
+    z-index: -1 !important;
+}

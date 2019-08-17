@@ -1,0 +1,966 @@
+/* I2P Orchid Plugin Theme by dr|z3d 2019 */
+/* Thanks to George Hodan for the orchid image */
+/* http://www.publicdomainpictures.net/view-image.php?image=35307 */
+/* See LICENSE-FatCowIcons.txt & LICENSE-Fugue-Icons.txt in i2p/licenses/ for icon licences */
+
+body {
+    margin: 10px;
+    padding: 0;
+    min-width: 860px;
+    color: #41465f;
+    background: url(images/tile2.png) fixed #a4a4cb;
+}
+
+body, table {
+    font-family: "Droid Sans", "Noto Sans", Ubuntu, "Segoe UI", Verdana, "Helvetica Neue", sans-serif;
+    font-size: 10pt;
+}
+
+html {
+    scrollbar-color: rgba(16,16,48,.3) rgba(0,0,0,0);
+}
+
+html:hover {
+    scrollbar-color: rgba(16,16,48,.4) rgba(0,0,0,0);
+}
+
+::selection {
+    background: #77f;
+    color: #fff;
+    text-shadow: none;
+}
+
+hr, .hidden {
+    display: none;
+}
+
+a:link, .node a:visited, .nickname {
+    color: #3b6bbf;
+    text-decoration: none;
+    outline: none;
+}
+
+a:visited {
+    color: #2c4e8f;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: #f60;
+}
+
+a:active {
+    color: #f30;
+}
+
+#container {
+    margin: 15px 5px;
+    padding: 8px;
+    max-width: 1920px;
+    border: 1px solid #447;
+    box-shadow: inset 0 0 0 1px #bbf;
+    background: #fff;
+    background: linear-gradient(to right, #fff, #efefff, #fff);
+/*    background: repeating-linear-gradient(45deg, rgba(255,255,255,.5) 1px, rgba(221, 221, 255, .1) 2px, rgba(255,255,255,.1) 2px), repeating-linear-gradient(135deg, rgba(255,255,255,1), rgba(221, 221, 255, .3) 1px, #fff 2px) #fafaff !important;
+    background-blend-mode: multiply, normal !important;*/
+    filter: drop-shadow(0 1px 1px #97a2ce);
+}
+
+code {
+    padding: 0 2px;
+    font-family: "Droid Sans Mono", "Noto Mono", "DejaVu Sans Mono", "Lucida Console", monospace;
+    color: #373;
+}
+
+.notice code {
+    font-weight: bold;
+    color: #fff;
+    border-radius: 2px;
+    background: #99a;
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    user-select: all;
+}
+
+#refresh {
+    margin: -1px -2px 0 0;
+    float: right;
+}
+
+#refresh a, #refresh a:visited {
+    margin: -2px 0 !important;
+    padding: 5px 5px 5px 20px;
+    display: inline-block;
+    line-height: 100%;
+    letter-spacing: normal;
+    text-decoration: none;
+    font-weight: normal;
+    text-transform: none;
+    font-size: 9.5pt;
+    color: #41465f !important;
+    border: 1px solid #97a2ce;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px #fff;
+    background: #fff url(images/refresh.png) 4px center no-repeat;
+    background: url(images/refresh.png) 4px center no-repeat, linear-gradient(to bottom, #fff, #eef);
+    background-size: 14px 14px, 100% 100% !important;
+}
+
+#refresh a:hover, #refresh a:focus {
+    border: 1px solid #f60;
+    background: #eee url(images/refresh.png) 4px center no-repeat;
+    background: url(images/refresh.png) 4px center no-repeat, linear-gradient(to bottom, #ddd, #fff);
+    filter: drop-shadow(0 0 1px #89f);
+}
+
+#refresh a:active {
+    box-shadow: inset 3px 3px 3px #999;
+    box-shadow: inset 0 0 0 1px #fff, inset 3px 3px 3px #999;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #7778bf;
+    background: #f8f8ff;
+}
+
+tr {
+    border: 1px solid #7778bf;
+}
+
+th#circuitsatus, #configtitle {
+    font-size: 13pt;
+}
+
+tr.subtitle th {
+    padding: 6px 8px;
+    letter-spacing: normal;
+    text-transform: none;
+    font-size: 10.5pt;
+    background: #f6f6ff;
+    background: linear-gradient(to bottom, #fdfdff, #f0f0ff);
+}
+
+#status th,  #status td {
+    text-align: center;
+}
+
+#status th, #status td  {
+    width: 25% !important;
+}
+
+#status td {
+    padding: 9px 8px;
+    border: 1px solid #7778bf;
+    box-shadow: inset 0 0 0 1px #fff;
+    background: #f2f2ff;
+}
+
+#status td:first-child {
+    text-transform: lowercase;
+}
+
+#status td:first-child::first-letter {
+    text-transform: uppercase;
+}
+
+#status td::before {
+    display: none;
+}
+
+#starting, #running, #registered, #notregistered  {
+    font-size: 0;
+}
+
+#starting::before, #running::before, #registered::before, #notregistered::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    background: url(images/starting.png) center center no-repeat;
+    background-size: 16px 16px;
+    animation: spin linear 3s forwards infinite;
+}
+
+#running::before, #registered::before {
+    background: url(images/tick.png) center center no-repeat;
+    background-size: 16px 16px;
+    animation: none;
+}
+
+#notregistered::before {
+    background: url(images/cross.png) center center no-repeat;
+    background-size: 16px 16px;
+    animation: none;
+}
+
+@keyframes spin {
+from {
+    transform: rotate(0)
+}
+to {
+    transform: rotate(360deg)
+}
+}
+
+table table {
+    box-shadow: 0 0 1px 0 #bbc;
+}
+
+table table tr:not(.stream):nth-child(odd), #configuration tr:not(.stream):nth-child(odd) {
+    background: #f2f2ff;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.5) 2px, rgba(220, 220, 255, .3) 3px, #fafaff 5px), #fafaff;
+}
+
+table table tr:not(.stream):nth-child(even), #configuration tr:not(.stream):nth-child(even) {
+    background: #ededff;
+    background: repeating-linear-gradient(135deg, rgba(252,252,255,.5) 2px, rgba(240, 240, 255, .3) 3px, #fafaff 5px) #f0f0ff;
+}
+
+table table:not(#status) tr:nth-child(n+3):hover, #configuration tr:nth-child(n+3):hover td, #status td:hover {
+    color: #292d3d;
+    background-color: #ffe;
+}
+
+td {
+    padding: 8px;
+}
+
+table table td::before {
+    content: "";
+    display: inline-block;
+    min-height: 20px;
+    vertical-align: middle;
+}
+
+#ports td::before {
+    min-height: 24px;
+}
+
+table table td, #configuration table td {
+    padding: 5px 8px;
+}
+
+td.notice, tr:hover td.notice {
+    padding: 15px 8px 15px 38px !important;
+    color: #222;
+    box-shadow: inset 0 0 0 1px #fff, inset 0 0 1px 1px #bbf;
+    background: #f8f8ff url(images/infohelp.png) 8px center no-repeat !important;
+    background-size: 24px 24px !important;
+}
+
+th, #configtitle {
+    padding: 6px 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 11pt;
+    background: #fff;
+    background: linear-gradient(to bottom, #fcfcff 50%, #f2f2ff 50%, #efefff);
+}
+
+th[colspan="2"] {
+    width: 50%;
+}
+
+#circuitstatus, #configtitle {
+    font-size: 12.5pt;
+}
+
+th#title {
+    padding: 10px 8px;
+    font-size: 16pt;
+    letter-spacing: 0.08em !important;
+    line-height: 110%;
+    text-shadow: 0 1px 1px #fff,0 -1px 1px #e2e2ff, 0 2px 1px #ddf;
+    background: url(images/orchid.png) right top no-repeat, linear-gradient(to bottom, #fcfcff 50%, #f2f2ff 50%, #efefff);
+    background-size: auto 120%, 100% 100%;
+}
+
+#circuitstatus {
+    background: url(images/circuits.png) 8px center no-repeat, linear-gradient(to bottom, #fcfcff 50%, #f2f2ff 50%, #efefff);
+    padding: 8px 8px 8px 37px;
+    background-size: 24px 24px, 100% 100%;
+}
+
+#circuitstatus, #configtitle, #circuitmonitor tr:first-child, #circuitstatus tr:first-child, #conncache tr:first-child, #ports tr:first-child {
+    text-shadow: 0 1px 2px #fff, 0 1px 1px #ccf;
+}
+
+#circuitmon tr:nth-child(2) th:nth-child(n+3), #circuitmon td:nth-child(n+3),
+#conncache th:nth-child(n+2), #conncache td:nth-child(n+2) {
+    text-align: center;
+}
+
+#circuitmon td:nth-child(2), #circuitmon td:nth-child(3) {
+    padding-left: 10px;
+}
+
+#circuitmon td:nth-child(3) .nowrap {
+    margin-left: 28px;
+    min-width: 80px;
+    display: inline-block;
+    text-align: left;
+}
+
+#circuitmon .circuit td:nth-child(3) i {
+    padding: 1px 8px;
+    display: inline-block;
+    min-width: 120px;
+    text-align: center;
+    border: 1px solid #ddf;
+    box-shadow: inset 0 0 0 1px #fff;
+    background: repeating-linear-gradient(135deg, rgba(238, 238, 255,.7) 1px, rgba(238, 238, 255, .7) 5px, rgba(221, 221, 255, .7) 6px, rgba(221, 221, 255, .7) 11px);
+    background-size: 800% 800%;
+    animation: progress 120s linear infinite both;
+}
+
+.stream .target {
+    margin: 0 1px;
+}
+
+#circuitmon td:last-child, .stream td:nth-child(2) {
+    white-space: nowrap;
+}
+
+#conncache tr:first-child th, #circuitstatus tr:first-child th, #ports tr:first-child th, #circuitmon tr:first-child th {
+    font-size: 11.5pt;
+}
+
+#conncache .nowrap, #ports .nowrap {
+    text-align: right;
+}
+
+#conncache .nowrap {
+    min-width: 30px;
+}
+
+#conncache td:first-child {
+    white-space: nowrap;
+}
+
+#conncache td:nth-child(2) .nowrap  {
+    min-width: 20px;
+}
+
+#ports .nowrap, #conncache td:nth-child(n+4) .nowrap {
+    min-width: 60px;
+}
+
+#ports .subtitle th:last-child, #ports td:last-child {
+    text-align: center;
+}
+
+#ports td:last-child .nowrap {
+    min-width: 120px;
+    text-align: right;
+}
+
+.circuitcount {
+    margin-left: 6px;
+    padding: 3px 4px 2px;
+    min-width: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 1px 1px #fff;
+    border-radius: 2px;
+    background: #dfdfff;
+}
+
+.circuitcontainer {
+    will-change: transform;
+}
+
+.nodecontainer {
+    position: relative;
+    vertical-align: middle;
+}
+
+.node {
+    margin: 1px 0;
+    padding: 2px 8px 2px 0;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #bbf;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #eef;
+    background: linear-gradient(to bottom, #f8f8ff, #e2e2ff);
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    user-select: all;
+    cursor: text;
+}
+
+.node .hidden {
+    font-size: 0;
+    display: inline;
+}
+
+.node:hover {
+    border-right: 10px solid #bbf;
+}
+
+.node:active {
+    border-color: #f30;
+    box-shadow: none;
+    cursor: copy;
+}
+
+.nickname a::selection  {
+    background: rgba(0,0,0,0) !important;
+    color: #3b6bbf !important;
+}
+
+.node:active .nickname a::selection {
+    color: #fff !important;
+}
+
+.node:active .nickname {
+    background-color: #f30;
+    box-shadow: none;
+}
+
+.node:active .flag {
+    border-color: #f30;
+    box-shadow: none;
+}
+
+a:hover .nickname::after, .flag::after {
+    color: #41465f;
+}
+
+a:visited:hover .nickname, a:visited:focus .nickname {
+    color: #f60 !important;
+}
+
+a:visited:active .nickname {
+    color: #f30 !important;
+}
+
+.node img {
+    vertical-align: middle;
+    margin: -1px 4px 0 0;
+}
+
+.node b {
+    font-size: 0;
+}
+
+.flag {
+    margin-right: 4px;
+    margin: -3px 4px -3px 0;
+    padding: 2px 1px 3px 5px;
+    display: inline-block;
+    vertical-align: middle;
+    border-right: 1px solid #bbf;
+    box-shadow: inset 0 0 0 1px #fff;
+    cursor: help;
+    -mozilla-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.flag img {
+    padding-bottom: 1px
+}
+
+.nickname::after, .flag::after {
+    content: attr(data-ipv4);
+    padding: 2px 3px 2px 15px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    top: -20px;
+    left: -10px;
+    white-space: nowrap;
+    text-align: center;
+    text-shadow: 0 1px 1px #fff;
+    border: 1px solid #373;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px #fff, 0 0 1px 1px rgba(192,192,192,.3);
+    background: url(images/node.png) left -1px center no-repeat, #ada;
+    background: url(images/node.png) left center no-repeat, linear-gradient(to bottom, #efe, #ded);
+    background-size: 16px 16px, 100% 100%;
+    opacity: 0;
+}
+
+.nickname::after {
+    padding-left: 17px;
+    color: #41465f;
+}
+
+.nickname.unknown::after {
+    display: none !important;
+}
+
+#circuitmon .nickname::after {
+    left: -70px;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.flag::after {
+    content: attr(data-country);
+    padding-left: 18px;
+    z-index: 101;
+    background: url(images/globe.png) left 4px center no-repeat, #ada;
+    background: url(images/globe.png) left 4px center no-repeat, linear-gradient(to bottom, #efe, #ded);
+    background-size: 12px 12px, 100% 100% !important;
+}
+
+.nickname {
+    margin: -2px -8px -2px -4px;
+    padding: 2px 6px 3px 5px;
+    display: inline-block;
+    box-shadow: inset 0 0 0 1px #fff;
+    width: 100px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.node:hover .nickname {
+    width: auto;
+    min-width: 100px;
+}
+
+#conncache .nickname {
+    margin-right: -8px;
+}
+
+.nickname:hover::after, .flag:hover::after {
+    display: inline-block;
+    width: auto;
+    opacity: 1;
+}
+
+#circuitmon .nodecontainer::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: calc(50%);
+    right: -4px !important;
+    height: 1px;
+    width: 4px;
+    vertical-align: middle;
+    background: #bbf;
+    z-index: 10;
+}
+
+#circuitmon .nodecontainer:last-of-type::after {
+    display: none !important;
+}
+
+.stream {
+    background-color: #f8fff8;
+}
+
+.stream td:first-child, .stream:hover td:first-child, .circuit td:first-child, .circuit:hover td:first-child {
+    padding-left: 26px !important;
+    background-image: url(images/tag_stream.png) !important;
+    background-size: 14px 14px !important;
+    background-position: 8px center !important;
+    background-repeat: no-repeat !important;
+}
+
+.circuit td:first-child, .circuit:hover td:first-child {
+    background-image: url(images/tag.png) !important;
+}
+
+.stream td:last-child {
+    text-align: center;
+}
+
+.stream td:last-child i {
+    margin-left: 1px;
+    padding: 1px 16px;
+    min-width: 106px;
+    display: inline-block;
+    text-align: center;
+    color: #4a4;
+    text-shadow: 0 1px 1px #fff;
+    border: 1px solid #aca;
+    box-shadow: inset 0 0 0 1px #fff;
+    background: repeating-linear-gradient(135deg, rgba(240, 255, 240, .7) 1px, rgba(240, 255, 240, .7) 6px, rgba(210, 240, 210,.7) 7px, rgba(210, 240, 210,.7) 11px);
+    background-size: 800% 800%;
+    animation: progress 120s linear infinite both;
+}
+
+.stream:hover td:last-child i {
+    color: #bb6;
+    border: 1px solid #cca;
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 240, .7) 1px, rgba(255, 255, 240, .7) 6px, rgba(240, 240, 220,.7) 7px, rgba(240, 240, 220,.7) 11px);
+    background-size: 800% 800%;
+    animation: progress 120s linear infinite both;
+}
+
+@keyframes progress {
+from {
+background-position: 200%
+}
+to {
+background-position: 0;
+}
+}
+
+.streamID {
+    display: none;
+}
+
+.nowrap {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.stream .nowrap {
+    min-width: 60px;
+    text-align: center;
+}
+
+.stream .nowrap:first-of-type {
+    padding-right: 20px;
+    text-align: left;
+}
+
+.stream .nowrap:last-of-type {
+    padding-left: 20px;
+    text-align: left;
+}
+
+.internal, .exit, .directory, .hiddenservice {
+    padding-left: 20px;
+    display: inline-block;
+    min-width: 120px;
+    vertical-align: middle;
+    text-align: left;
+    background: url(images/internal.png) left center no-repeat;
+    background-size: 16px 16px !important;
+}
+
+.exit {
+    background: url(images/exit.png) left center no-repeat;
+}
+
+.directory {
+    background: url(images/directory.png) left center no-repeat;
+}
+
+.hiddenservice {
+    background: url(images/hiddenservice.png) left center no-repeat;
+}
+
+.rx::before, .tx::before, .target::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 16px;
+    vertical-align: top;
+}
+
+.tx::before {
+    background: url(images/tx.png) left center no-repeat;
+    background-size: 14px 14px;
+}
+
+.rx::before {
+    background: url(images/rx.png) left center no-repeat;
+    background-size: 14px 14px;
+}
+
+.target::before {
+    margin-top: -6px;
+    width: 15px;
+    height: 16px;
+    vertical-align: middle;
+    background: url(images/target.png) left top no-repeat;
+    background-size: 14px 14px;
+}
+
+.rx, .tx, .target {
+    font-size: 0;
+}
+
+#configsection, #configsection td {
+    border: none;
+}
+
+#configsection td {
+    padding: 0;
+}
+
+#configsection table td {
+    padding: 5px 8px;
+}
+
+#configuration {
+    position: relative;
+    border: none;
+}
+
+#configuration tr {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+#configuration td:first-child {
+    border-left: none !important;
+}
+
+#configuration td:last-child {
+    border-right: none !important;
+}
+
+#configuration tr:last-child, #configuration tr:last-child td {
+    border-bottom: none !important;
+}
+
+#configuration th {
+    width: 25%;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+#configuration tr:nth-child(n+3) td:first-child {
+    font-weight: bold;
+}
+
+#configuration tr:hover td {
+    box-shadow: none;
+}
+
+#configuration td:first-child {
+    border-left: none !important;
+}
+
+#configuration td:last-child {
+    border-right: none !important;
+    line-height: 1.1;
+}
+
+#configtitle {
+    margin: -1px 0;
+    padding: 8px;
+    padding-left: 37px;
+    width: calc(100% - 47px);
+    display: inline-block;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 12.5pt;
+    font-weight: bold;
+    border: 1px solid #7778bf;
+    border-left: none;
+    border-right: none;
+    background: url(images/configure.png) 8px center no-repeat, linear-gradient(to bottom, #fcfcff 50%, #f2f2ff 50%, #efefff);
+    background-size: 24px 24px, 100% 100% !important;
+}
+
+#expand, #collapse {
+    display: inline-block !important;
+    position: absolute;
+    top: calc(50% - 18px);
+    right: -1px;
+    font-size: 0;
+    border-left: 1px solid #7778bf;
+}
+
+#collapse {
+    display: none !important;
+}
+
+#expand img, #collapse img {
+    padding: 13px;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#expand:hover img, #collapse:hover img {
+    filter: drop-shadow(0 0 1px #f60);
+}
+
+#configuration td:nth-child(2) code {
+    color: #050;
+    line-height: 115%;
+}
+
+#configuration td:nth-child(2) code, #configuration td:nth-child(2) .nowrap {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#configuration tr:hover td:nth-child(2) code {
+    color: #070;
+}
+
+#configuration tr:hover td:nth-child(2) code::selection {
+    color: #fff;
+    background: #070;
+
+}
+
+#configuration .nowrap {
+    font-style: italic;
+    color: #41465f;
+}
+
+#configuration i {
+    margin-right: 1px;
+}
+
+.stream, .circuit {
+    border-top: 1px solid #ddf;
+    border-bottom: 1px solid #ddf;
+    border-left: 1px solid #7778bf;
+    border-right: 1px solid #7778bf;
+}
+
+.circuit, .stream, #conncache tr, #ports tr, #configuration tr {
+    border-top: 1px solid #ddf;
+    border-bottom: 1px solid #ddf;
+}
+
+tr:first-child td, tr:last-child, #configuration tr:last-child, #conncache tr:last-child, #ports tr:last-child {
+    border-bottom: 1px solid #7778bf;
+}
+
+#configuration tr:first-child, #configuration tr:nth-child(2),
+#conncache tr:first-child, #conncache tr:nth-child(2),
+#ports tr:first-child, #ports tr:nth-child(2) {
+    border-top: 1px solid #7778bf;
+    border-bottom: 1px solid #7778bf;
+}
+
+#conncache tr:nth-child(2), #conncache tr:nth-child(2) th {
+    border-bottom: 1px solid #7778bf !important;
+}
+
+#conncache tr:nth-child(3), #conncache tr:nth-child(3) td {
+    border-top: 1px solid #7778bf !important;
+}
+
+td, #configuration td {
+    border: 1px inset #dde;
+    border-left-style: solid;
+    border-right-style: solid;
+    box-shadow: inset 0 0 0 1px #fff !important;
+}
+
+.stream td, .stream:hover td, .circuit:hover td, #conncache tr:nth-child(n+3):hover td, #ports tr:nth-child(n+3):hover td, #configuration tr:nth-child(n+3):hover td {
+    border: none;
+    box-shadow: none !important;
+}
+
+td:first-child {
+    border-left: 1px solid #7778bf !important;
+}
+
+td:last-child {
+    border-right: 1px solid #7778bf !important;
+}
+
+.stream td:first-child {
+    border-right: 1px solid #f8fff8 !important;
+}
+
+.stream td:last-child {
+    border-left: 1px solid #f8fff8 !important;
+}
+
+.stream:hover td:first-child {
+    border-right: 1px solid #ffe !important;
+}
+
+.stream:hover td:last-child {
+    border-left: 1px solid #ffe !important;
+}
+
+table table tr:hover td {
+     background-color: #ffe;
+}
+
+@media screen and (max-width: 1480px) {
+#circuitmon th, #circuitmon td {
+    width: auto !important;
+}
+
+#circuitmon tr:nth-child(2) th:last-child {
+    width: 60% !important;
+}
+
+#circuitmon th, #conncache th {
+    white-space: nowrap;
+}
+}
+
+@media screen and (max-width: 1000px) {
+body {
+    margin: 3px;
+}
+
+#container {
+    margin: 0;
+}
+
+body, table {
+    font-size: 9.5pt !important;
+}
+
+#title {
+    font-size: 14pt !important;
+}
+
+th#circuitstatus, #configtitle {
+    font-size: 12pt !important;
+}
+
+#conncache tr:first-child th, #circuitstatus tr:first-child th, #ports tr:first-child th, #circuitmon tr:first-child th {
+    font-size: 10.5pt;
+}
+
+tr.subtitle th {
+    font-size: 10pt;
+}
+
+.flag, .nickname, .circuitcount {
+    height: 16px;
+}
+
+.nickname {
+    width: 90px;
+}
+
+.flag img {
+    margin-top: 1px;
+}
+
+.circuitcount {
+    margin-top: 2px;
+}
+
+#refresh {
+    margin-top: 0;
+}
+
+.stream td:last-child i {
+    min-width: 96px;
+}
+
+#circuitmon .circuit td:nth-child(3) i {
+    min-width: 86px;
+}
+}
+
+@media screen and (min-width: 1480px) {
+#circuitmon th:first-child, #circuitmon th:nth-child(3) {
+    width: 12.5%;
+}
+}

@@ -14,6 +14,7 @@ import com.subgraph.orchid.directory.parsing.DocumentParsingHandler;
 /*
  * This class contains the hardcoded 'bootstrap' directory authority
  * server information. 
+ * https://github.com/torproject/tor/blob/release-0.4.1/src/app/config/auth_dirs.inc
  */
 public class TrustedAuthorities {
 	
@@ -27,7 +28,8 @@ public class TrustedAuthorities {
 	    "authority Faravahar orport=443 v3ident=EFCBE720AB3A82B99F9E953CD5BF50F7EEFC7B97 154.35.175.225:80 CF6D 0AAF B385 BE71 B8E1 11FC 5CFF 4B47 9237 33BC",
 	    "authority gabelmoo orport=443 v3ident=ED03BB616EB2F60BEC80151114BB25CEF515B226 131.188.40.189:80 F204 4413 DAC2 E02E 3D6B CF47 35A1 9BCA 1DE9 7281",
 	    "authority bastet orport=443 v3ident=27102BC123E7AF1D4741AE047E160C91ADC76B21 204.13.164.118:80 24E2 F139 121D 4394 C54B 5BCC 368B 3B41 1857 C413",
-	    "authority Bifroest orport=443 bridge 37.218.247.217:80 1D8F 3A91 C37C 5D1C 4C19 B1AD 1D0C FBE8 BF72 D8E1",
+	    // bridges don't work with orchid? and non-bridges listed after bridges don't work either
+	    // "authority Bifroest orport=443 bridge 37.218.247.217:80 1D8F 3A91 C37C 5D1C 4C19 B1AD 1D0C FBE8 BF72 D8E1",
 	};
 
 	private final List<DirectoryServer> directoryServers = new ArrayList<DirectoryServer>();

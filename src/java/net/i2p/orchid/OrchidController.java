@@ -26,6 +26,7 @@ import com.subgraph.orchid.config.TorConfigBridgeLine;
 import com.subgraph.orchid.config.TorConfigInterval;
 import com.subgraph.orchid.config.TorConfigParser;
 import com.subgraph.orchid.dashboard.Dashboard;
+import com.subgraph.orchid.geoip.CountryCodeService;
 
 import net.i2p.I2PAppContext;
 import net.i2p.app.*;
@@ -94,7 +95,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         if (_mgr != null)
             _mgr.register(this);
         if (_log.shouldLog(Log.INFO))
-            _log.info("Orchid ready");
+            _log.info("Orchid plugin ready");
     }
 
     /**
@@ -106,7 +107,8 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             throw new IllegalStateException();
         changeState(STARTING);
         if (_log.shouldLog(Log.INFO))
-            _log.info("Starting Orchid");
+            _log.info("Starting Orchid plugin...");
+
         // TODO config dir
         try {
             _logger = new OrchidLogHandler(_context);
@@ -114,6 +116,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             _client.getConfig().setDataDirectory(_configDir);
             loadConfig(_client.getConfig());
             _client.addInitializationListener(this);
+            CountryCodeService.getInstance();
             _client.start();
         } catch (RuntimeException t) {
             // TorException extends RuntimeException,
@@ -191,7 +194,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             return;
         changeState(STOPPING);
         if (_log.shouldLog(Log.INFO))
-            _log.info("Stopping Orchid");
+            _log.info("Stopping Orchid plugin...");
         if (_mgr != null)
             _mgr.unregister(this);
         if (_client != null) {
@@ -204,13 +207,13 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         }
         changeState(STOPPED);
         if (_log.shouldLog(Log.INFO))
-            _log.info("Orchid stopped");
+            _log.info("Orchid plugin stopped");
     }
 
     public Socket connect(String host, int port) throws IOException {
         if (host.equals("127.0.0.1") || host.equals("localhost") ||
             host.toLowerCase(Locale.US).endsWith(".i2p"))
-            throw new IOException("unsupported host " + host);
+            throw new IOException("unsupported host: " + host);
         ClientAppState state = _state;
         if (state != RUNNING)
             throw new IOException("Cannot connect in state " + state);
@@ -224,7 +227,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             IOException ioe = new IOException("connect error");
             ioe.initCause(e);
             if (_log.shouldLog(Log.DEBUG))
-                _log.debug("Error Connecting to " + host + ':' + port, ioe);
+                _log.debug("Error connecting to " + host + ':' + port + "\n* Reason:" + ioe.getMessage());
             throw ioe;
         }
     }
@@ -246,11 +249,11 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
             DataHelper.loadProps(p, _configFile);
         } catch (IOException ioe) {
             if (_log.shouldLog(Log.WARN))
-                _log.warn("error loading config file", ioe);
+                _log.warn("Error loading Orchid config file \n* Reason: " + ioe.getMessage());
             return;
         }
         if (_log.shouldLog(Log.INFO))
-            _log.info("Loading " + p.size() + " configuations");
+            _log.info("Loading " + p.size() + " Orchid configuration options");
         TorConfigParser tcp = new TorConfigParser();
         for (Map.Entry e : p.entrySet()) {
             String k = (String) e.getKey();
@@ -318,7 +321,7 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
                 tc.setWarnUnsafeSocks((Boolean) tcp.parseValue(v, "BOOLEAN"));
             } else {
                 if (_log.shouldLog(Log.WARN))
-                    _log.warn("Unknown config entry " + k + " = " + v);
+                    _log.warn("Invalid Orchid config entry: " + k + " = " + v);
             }
         }
     }
@@ -331,7 +334,8 @@ public class OrchidController implements ClientApp, TorInitializationListener, O
         PrintWriter pw = new PrintWriter(sw);
         (new Dashboard()).renderComponent(pw, 0xff, _client.getCircuitManager());
         pw.close();
-        out.write(DataHelper.escapeHTML(sw.toString()));
+        out.write(sw.toString());
    }
+
 }
     

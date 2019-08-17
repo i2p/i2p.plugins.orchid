@@ -73,9 +73,9 @@ public class TorClient {
 			return;
 		}
 		if(isStopped) {
-			throw new IllegalStateException("Cannot restart a TorClient instance.  Create a new instance instead.");
+			throw new IllegalStateException("Cannot restart Orchid instance. Create a new instance instead.");
 		}
-		logger.info("Starting Orchid (version: "+ Tor.getFullVersion() +")");
+		logger.info("Starting Orchid... [version: " + Tor.getFullVersion() + "]");
 		verifyUnlimitedStrengthPolicyInstalled();
 		directoryDownloader.start(directory);
 		circuitManager.startBuildingCircuits();
@@ -99,7 +99,7 @@ public class TorClient {
 			directory.close();
 			connectionCache.close();
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Unexpected exception while shutting down TorClient instance: "+ e, e);
+			logger.log(Level.WARNING, "Unexpected exception while shutting down Orchid instance: " + e, e);
 		} finally {
 			isStopped = true;
 		}
@@ -208,7 +208,7 @@ public class TorClient {
 				throw new TorException(message);
 			}
 		} catch (NoSuchAlgorithmException e) {
-			logger.log(Level.SEVERE, "No AES provider found");
+			logger.log(Level.SEVERE, "WARNING! No AES provider found");
 			throw new TorException(e);
 		}  catch (NoSuchMethodError e) {
 			logger.info("Skipped check for Unlimited Strength Jurisdiction Policy Files");

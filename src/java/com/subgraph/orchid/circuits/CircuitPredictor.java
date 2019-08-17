@@ -79,21 +79,31 @@ public class CircuitPredictor implements DashboardRenderable {
 
 	public void dashboardRender(DashboardRenderer renderer, PrintWriter writer, int flags)
 			throws IOException {
-		
 		if((flags & DASHBOARD_PREDICTED_PORTS) == 0) {
 			return;
 		}
-		writer.println("[Predicted Ports] ");
+		if (getPredictedPorts().size() > 0)
+			writer.print("<tr>");
+		else
+			writer.print("<tr class=\".hidden\" hidden>");
+		writer.println("<td>\n<hr>\n<table id=\"ports\" width=\"100%\">\n<tr><th colspan=\"4\" align=\"left\">Predicted Ports</th></tr>");
+		writer.println("<tr class=\"subtitle\"><th colspan=\"2\" align=\"left\" width=\"50%\">Port</th><th colspan=\"2\" align=\"left\">Last Seen</th></tr>");
 		for(int port : portsSeen.keySet()) {
-			writer.write(" "+ port);
+			writer.write("<tr><td colspan=\"2\">" + port + "</td>");
 			Long lastSeen = portsSeen.get(port);
+			writer.write("<td colspan=\"2\">");
 			if(lastSeen != null) {
 				long now = System.currentTimeMillis();
 				long ms = now - lastSeen;
-				writer.write(" (last seen "+ TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS) +" minutes ago)");
+				String min = "minutes";
+				if (ms > 59999 && ms < 120000)
+					min = "minute";
+				if (ms < 60000)
+					writer.write("<span class=\"nowrap\">in the last 60s</span>");
+				else
+					writer.write("<span class=\"nowrap\">" + TimeUnit.MINUTES.convert(ms, TimeUnit.MILLISECONDS) + " " + min + " ago</span>");
 			}
-			writer.println();
+				writer.println("</td></tr>");
 		}
-		writer.println();
 	}
 }

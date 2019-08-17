@@ -117,7 +117,7 @@ public class StreamImpl implements Stream, DashboardRenderable {
 		if(isClosed)
 			return;
 		
-		logger.fine("Closing stream "+ this);
+		logger.fine("Closing " + this);
 		
 		isClosed = true;
 		inputStream.close();
@@ -140,7 +140,7 @@ public class StreamImpl implements Stream, DashboardRenderable {
 	}
 
 	public void openDirectory(long timeout) throws InterruptedException, TimeoutException, StreamConnectFailedException {
-		streamTarget = "[Directory]";
+		streamTarget = "Directory Service";
 		final RelayCell cell = new RelayCellImpl(circuit.getFinalCircuitNode(), circuit.getCircuitId(), streamId, RelayCell.RELAY_BEGIN_DIR);
 		circuit.sendRelayCellToFinalNode(cell);
 		waitForRelayConnected(timeout);
@@ -207,18 +207,20 @@ public class StreamImpl implements Stream, DashboardRenderable {
 	}
 
 	public String toString() {
-		return "[Stream stream_id="+ streamId + " circuit="+ circuit +" target="+ streamTarget +"]";
+		return "StreamID=" + streamId + " Circuit=" + circuit + " Target=" + streamTarget;
 	}
 
 	public void dashboardRender(DashboardRenderer renderer, PrintWriter writer, int flags) throws IOException {
-		writer.print("     ");
-		writer.print("[Stream stream_id="+ streamId + " cid="+ circuit.getCircuitId());
+		writer.print("<tr class=\"stream\"><td title=\"Stream ID\">");
+		writer.print("<b class=\"streamID\">Stream ID: </b>" + streamId + "</td>");
+		// TODO: Indicate target if .onion > hiddenServiceManager.getStreamTo(hostname, port);
+		writer.print("<td colspan=\"2\"><b class=\"target\" title=\"Target\">Target:</b> " + streamTarget + "</td><td>");
 		if(relayConnectedReceived) {
-			writer.print(" sent="+outputStream.getBytesSent() + " recv="+ inputStream.getBytesReceived());
+			writer.print("<span class=\"nowrap\" title=\"Received\"><b class=\"rx\">Received:</b> " + (inputStream.getBytesReceived() / 1024) + " KB</span> " +
+						 "<span class=\"nowrap\" title=\"Sent\"><b class=\"tx\">Sent:</b> " + (outputStream.getBytesSent() / 1024) + " KB</span>");
 		} else {
-			writer.print(" (waiting connect)");
+			writer.print("<i>Connecting&hellip;</i>");
 		}
-		writer.print(" target="+ streamTarget);
-		writer.println("]");
+		writer.println("</td></tr>");
 	}
 }

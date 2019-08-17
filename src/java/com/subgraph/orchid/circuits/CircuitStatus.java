@@ -6,7 +6,7 @@ public class CircuitStatus {
 
 	enum CircuitState {
 		UNCONNECTED("Unconnected"),
-		BUILDING("Building"),
+		BUILDING("<i>Building&hellip;</i>"),
 		FAILED("Failed"),
 		OPEN("Open"),
 		DESTROYED("Destroyed");
@@ -103,9 +103,9 @@ public class CircuitStatus {
 
 	private String getDirtyString() {
 		if(!isDirty()) {
-			return "Clean";
+			return "<span class=\"nowrap\"><span class=\"hidden\">(</span>Clean<span class=\"hidden\">)</span></span>";
 		} else {
-			return "Dirty "+ (getMillisecondsDirty() / 1000) +"s"; 
+			return "<span class=\"nowrap\"><span class=\"hidden\">(</span>Dirty: " + (getMillisecondsDirty() / 1000) + "s<span class=\"hidden\">)</span></span>";
 		}
 	}
 	int nextStreamId() {

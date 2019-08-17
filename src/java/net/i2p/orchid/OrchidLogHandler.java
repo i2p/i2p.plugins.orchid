@@ -35,7 +35,25 @@ public class OrchidLogHandler extends Handler {
     public void publish(LogRecord record) {
         Log log = _mgr.getLog(record.getLoggerName());
         int level = toI2PLevel(record.getLevel());
-        log.log(level, record.getMessage(), record.getThrown());
+        // fix logs so they don't spew html tags; various cleanups & detritus removal
+        log.log(level, "[Orchid] " + record.getMessage().replaceAll("<noscript>((?:.*?\r?\n?)*)</noscript>", "")
+                                          .replaceAll("<.+?>", " ")
+                                          .replaceAll("Building&hellip;", "")
+                                          .replaceAll("&hellip;", "...")
+                                          .replaceAll("Target=", "\\\n* Target: ")
+                                          .replaceAll("Circuit=", "CircuitID=")
+                                          .replaceAll("Exit ", "")
+                                          .replaceAll("Open ", "")
+                                          .replaceAll("( )+", " ")
+                                          .replaceAll("\\(.+?\\)", "")
+                                          .replaceAll("\\[ ", "\\[")
+                                          .replaceAll(" \\]", "\\]")
+                                          .replaceAll(" +\\]", "\\]")
+                                          .replaceAll(" =", "=")
+                                          .replaceAll("= ", "=")
+                                          .replaceAll("\\] -> \\[", " -> ")
+                                          .replaceAll("\\( ", "\\(")
+                                          .replaceAll(" \\)", "\\)"), record.getThrown());
     }
 
     private static int toI2PLevel(Level level) {

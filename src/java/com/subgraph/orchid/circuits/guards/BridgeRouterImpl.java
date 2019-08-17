@@ -5,6 +5,8 @@ import java.util.Set;
 
 import com.subgraph.orchid.BridgeRouter;
 import com.subgraph.orchid.Descriptor;
+import com.subgraph.orchid.Directory;
+import com.subgraph.orchid.Router;
 import com.subgraph.orchid.RouterDescriptor;
 import com.subgraph.orchid.crypto.TorPublicKey;
 import com.subgraph.orchid.data.HexDigest;
@@ -18,7 +20,9 @@ public class BridgeRouterImpl implements BridgeRouter {
 	private HexDigest identity;
 	private Descriptor descriptor;
 	
+	private Directory directory;
 	private volatile String cachedCountryCode;
+	private volatile String cachedCountryName;
 	
 	BridgeRouterImpl(IPv4Address address, int port) {
 		this.address = address;
@@ -27,6 +31,14 @@ public class BridgeRouterImpl implements BridgeRouter {
 	
 	public IPv4Address getAddress() {
 		return address;
+	}
+
+	public String getPlatform() {
+		return null;
+	}
+
+	public int getUptime() {
+		return 0;
 	}
 
 	public HexDigest getIdentity() {
@@ -39,6 +51,10 @@ public class BridgeRouterImpl implements BridgeRouter {
 
 	public void setDescriptor(RouterDescriptor descriptor) {
 		this.descriptor = descriptor;
+	}
+
+	public void setDirectory(Directory directory) {
+		this.directory = directory;
 	}
 
 	@Override
@@ -86,6 +102,15 @@ public class BridgeRouterImpl implements BridgeRouter {
 			cachedCountryCode = cc;
 		}
 		return cc;
+	}
+
+	public String getCountryName() {
+		String cn = cachedCountryName;
+		if (cn == null) {
+			cn = CountryCodeService.getInstance().getCountryNameForAddress(getAddress());
+			cachedCountryName = cn;
+		}
+		return cn;
 	}
 
 	public int getOnionPort() {

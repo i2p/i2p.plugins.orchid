@@ -42,7 +42,7 @@ public class CircuitBuildTask implements Runnable {
 			circuit.notifyCircuitBuildStart();
 			creationRequest.choosePath();
 			if(logger.isLoggable(Level.FINE)) {
-				logger.fine("Opening a new circuit to "+ pathToString(creationRequest));
+				logger.fine("Selecting path for new circuit " + pathToString(creationRequest));
 			}
 			firstRouter = creationRequest.getPathElement(0);
 			openEntryNodeConnection(firstRouter);
@@ -72,7 +72,7 @@ public class CircuitBuildTask implements Runnable {
 		sb.append("[");
 		for(Router r: ccr.getPath()) {
 			if(sb.length() > 1)
-				sb.append(",");
+				sb.append(" -> ");
 			sb.append(r.getNickname());
 		}
 		sb.append("]");

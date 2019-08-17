@@ -35,7 +35,7 @@ public class CircuitExtender {
 	
 	
 	CircuitNode createFastTo(Router targetRouter) {
-		logger.fine("Creating 'fast' to "+ targetRouter);
+		logger.fine("Performing CREATE_FAST handshake with " + targetRouter);
 		final TorCreateFastKeyAgreement kex = new TorCreateFastKeyAgreement();
 		sendCreateFastCell(kex);
 		return receiveAndProcessCreateFastResponse(targetRouter, kex);
@@ -50,7 +50,7 @@ public class CircuitExtender {
 	private CircuitNode receiveAndProcessCreateFastResponse(Router targetRouter, TorKeyAgreement kex) {
 		final Cell cell = circuit.receiveControlCellResponse();
 		if(cell == null) {
-			throw new TorException("Timeout building circuit waiting for CREATE_FAST response from "+ targetRouter);
+			throw new TorException("Circuit build timeout waiting for CREATE_FAST response from " + targetRouter);
 		}
 
 		return processCreatedFastCell(targetRouter, cell, kex);
@@ -89,14 +89,14 @@ public class CircuitExtender {
 	}
 	
 	private void logProtocolViolation(String sourceName, Router targetRouter) {
-		final String version = (targetRouter == null) ? "(none)" : targetRouter.getVersion();
-		final String targetName = (targetRouter == null) ? "(none)" : targetRouter.getNickname();
-		logger.warning("Protocol error extending circuit from ("+ sourceName +") to ("+ targetName +") [version: "+ version +"]");
+		final String version = (targetRouter == null) ? "n/a" : targetRouter.getVersion();
+		final String targetName = (targetRouter == null) ? "n/a" : targetRouter.getNickname();
+		logger.warning("Protocol error extending circuit from [" + sourceName + "] to [" + targetName + "] -> version: " + version);
 	}
 
 	private String nodeToName(CircuitNode node) {
 		if(node == null || node.getRouter() == null) {
-			return "(null)";
+			return "n/a";
 		}
 		final Router router = node.getRouter();
 		return router.getNickname();
@@ -121,7 +121,7 @@ public class CircuitExtender {
 			if(code == Cell.ERROR_PROTOCOL) {
 				logProtocolViolation(source, extendTarget);
 			}
-			throw new TorException("Error from ("+ source +") while extending to ("+ extendTarget.getNickname() + "): "+ msg);
+			throw new TorException("Error from [" + source + "] while extending to [" + extendTarget.getNickname() + "] " + msg);
 		} else if(command != expectedCommand) {
 			final String expected = RelayCellImpl.commandToDescription(expectedCommand);
 			final String received = RelayCellImpl.commandToDescription(command);
@@ -134,7 +134,7 @@ public class CircuitExtender {
 
 	public CircuitNode createNewNode(Router r, byte[] keyMaterial, byte[] verifyDigest) {
 		final CircuitNode node = CircuitNodeImpl.createNode(r, circuit.getFinalCircuitNode(), keyMaterial, verifyDigest);
-		logger.fine("Adding new circuit node for "+ r.getNickname());
+		logger.fine("Adding new circuit node [" + r.getNickname() + "]"); // we're extending the circuit with this node, not for it.
 		circuit.appendNode(node);
 		return node;
 

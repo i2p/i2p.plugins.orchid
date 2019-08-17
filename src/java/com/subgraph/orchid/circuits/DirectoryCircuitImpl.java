@@ -37,6 +37,6 @@ public class DirectoryCircuitImpl extends CircuitImpl implements DirectoryCircui
 
 	@Override
 	protected String getCircuitTypeLabel() {
-		return "Directory";
+		return "<span class=\"directory\">Directory</span>";
 	}
 }

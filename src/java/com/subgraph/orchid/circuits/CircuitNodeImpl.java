@@ -67,9 +67,9 @@ public class CircuitNodeImpl implements CircuitNode {
 
 	public String toString() {
 		if(router != null) {
-			return "|"+ router.getNickname() + "|";
+			return router.getNickname();
 		} else {
-			return "|()|";
+			return "<i>unknown</i>";
 		}
 	}
 

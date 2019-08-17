@@ -25,6 +25,7 @@ public class RouterImpl implements Router {
 	private Descriptor descriptor;
 	
 	private volatile String cachedCountryCode;
+	private volatile String cachedCountryName;
 	
 	protected RouterImpl(Directory directory, RouterStatus status) {
 		this.directory = directory;
@@ -38,6 +39,7 @@ public class RouterImpl implements Router {
 			throw new TorException("Identity hash does not match status update");
 		this.status = status;
 		this.cachedCountryCode = null;
+		this.cachedCountryName = null;
 		this.descriptor = null;
 		refreshDescriptor();
 	}
@@ -147,6 +149,15 @@ public class RouterImpl implements Router {
 		}
 	}
 
+	public String getPlatform() {
+		final RouterDescriptor rd = downcastDescriptor();
+		if (rd != null) {
+			return rd.getPlatform();
+		} else {
+			return null;
+		}
+	}
+
 	public String getNickname() {
 		return status.getNickname();
 	}
@@ -170,6 +181,15 @@ public class RouterImpl implements Router {
 			return descriptor.getNTorOnionKey();
 		} else {
 			return null;
+		}
+	}
+
+	public int getUptime() {
+		final RouterDescriptor rd = downcastDescriptor();
+		if (rd != null) {
+			return rd.getUptime();
+		} else {
+			return 0;
 		}
 	}
 
@@ -237,7 +257,7 @@ public class RouterImpl implements Router {
 	}
 	
 	public String toString() {
-		return "Router["+ getNickname() +" ("+getAddress() +":"+ getOnionPort() +")]";
+		return "[" + getNickname() + " (" + getAddress() +":" + getOnionPort() + ")]";
 	}
 
 	public String getCountryCode() {
@@ -249,6 +269,15 @@ public class RouterImpl implements Router {
 		return cc;
 	}
 	
+	public String getCountryName() {
+		String cn = cachedCountryName;
+		if (cn == null) {
+			cn = CountryCodeService.getInstance().getCountryNameForAddress(getAddress());
+			cachedCountryName = cn;
+		}
+		return cn;
+	}
+
 	private RouterDescriptor downcastDescriptor() {
 		refreshDescriptor();
 		if(descriptor instanceof RouterDescriptor) {

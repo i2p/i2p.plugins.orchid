@@ -11,12 +11,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import net.i2p.util.SystemVersion;
+
 public class TorConfigImpl implements TorConfig {
 
     private void resetDefaults() {
         dataDirectory = toFile("~/.orchid");
         circuitBuildTimeout = toMS(60, TimeUnit.SECONDS);
-        circuitStreamTimeout = 0;
+//        circuitStreamTimeout = 0; // a value of 0 will cause a request for an unavailable resource to never fail?
+        circuitStreamTimeout = toMS(90, TimeUnit.SECONDS);
         circuitIdleTimeout = toMS(1, TimeUnit.HOURS);
         newCircuitPeriod = toMS(30, TimeUnit.SECONDS);
         maxCircuitDirtiness = toMS(10, TimeUnit.MINUTES);
@@ -34,14 +37,19 @@ public class TorConfigImpl implements TorConfig {
         fascistFirewall = false;
         firewallPorts = toIntList("80,443");
         safeSocks = false;
-        safeLogging = true;
+//        safeLogging = true; // ineffective as target info displays in logs
+        safeLogging = false;
         warnUnsafeSocks = true;
         clientRejectInternalAddress = true;
         handshakeV3Enabled = true;
         handshakeV2Enabled = true;
         hsAuth = new TorConfigHSAuth();
         useNtorHandshake = AutoBoolValue.AUTO;
-        useMicrodescriptors = AutoBoolValue.AUTO;
+        // full descriptors OOMs for < 192MB
+        if (SystemVersion.getMaxMemory() < 180*1024*1024L)
+            useMicrodescriptors = AutoBoolValue.AUTO;
+        else
+            useMicrodescriptors = AutoBoolValue.FALSE; // pull the full descriptors for extra info e.g. uptime stats
         useBridges = false;
         bridgeLines = new ArrayList<TorConfigBridgeLine>();
     }
@@ -76,7 +84,6 @@ public class TorConfigImpl implements TorConfig {
     private AutoBoolValue useMicrodescriptors;
     private boolean useBridges;
     private List<TorConfigBridgeLine> bridgeLines;
-
 
     private static long toMS(long time, TimeUnit unit) {
         return TimeUnit.MILLISECONDS.convert(time, unit);

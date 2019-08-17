@@ -1,0 +1,2 @@
+For licensing information, See the MaxMind license in the I2P application directory:
+i2p/licenses/LICENSE-GeoIP.txt

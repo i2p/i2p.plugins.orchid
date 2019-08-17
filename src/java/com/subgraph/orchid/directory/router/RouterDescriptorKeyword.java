@@ -24,7 +24,9 @@ public enum RouterDescriptorKeyword {
 	WRITE_HISTORY("write-history"),
 	EVENTDNS("eventdns", 1),
 	CACHES_EXTRA_INFO("caches-extra-info", 0),
-	EXTRA_INFO_DIGEST("extra-info-digest", 1),
+	// could now be 1 or 2
+	// https://github.com/torproject/torspec/commit/0f03581e748d4867a009d3d9473d61a400a3f5c1
+	EXTRA_INFO_DIGEST("extra-info-digest"),
 	HIDDEN_SERVICE_DIR("hidden-service-dir"),
 	PROTOCOLS("protocols"),
 	ALLOW_SINGLE_HOP_EXITS("allow-single-hop-exits", 0),

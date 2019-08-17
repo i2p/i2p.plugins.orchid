@@ -190,7 +190,7 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 			try {
 				output.write(cell.getCellBytes());
 			} catch (IOException e) {
-				logger.fine("IOException writing cell to connection "+ e.getMessage());
+				logger.fine("IOException writing cell to connection: " + e.getMessage());
 				closeSocket();
 				throw new ConnectionIOException(e.getClass().getName() + " : "+ e.getMessage());
 			}
@@ -298,7 +298,7 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 		try {
 			circuit = circuitMap.get(cell.getCircuitId());
 			if(circuit == null) {
-				logger.warning("Could not deliver relay cell for circuit id = "+ cell.getCircuitId() +" on connection "+ this +". Circuit not found");
+				logger.warning("Could not deliver relay cell for CircuitID=" + cell.getCircuitId() + " on connection " + this + ". Circuit not found");
 				return;
 			}
 		} finally {
@@ -356,7 +356,7 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 	}
 
 	public String toString() {
-		return "!" + router.getNickname() + "!";
+		return "[" + router.getNickname() + "]";
 	}
 
 	public void dashboardRender(DashboardRenderer renderer, PrintWriter writer, int flags) throws IOException {
@@ -370,9 +370,57 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 		if(circuitCount == 0 && (flags & DASHBOARD_CONNECTIONS_VERBOSE) == 0) {
 			return;
 		}
-		writer.print("  [Connection router="+ router.getNickname());
-		writer.print(" circuits="+ circuitCount);
-		writer.print(" idle="+ (getIdleMilliseconds()/1000) + "s");
-		writer.println("]");
+		if (circuitCount > 0) {
+			String idHash = router.getIdentityHash().toString().toUpperCase();
+			writer.print("<tr><td><span class=\"nodecontainer\"><span class=\"hidden\">[</span><span class=\"node\" onclick=\"copyText();\">" +
+						 "<span class=\"flag\" data-country=\"");
+			if (router.getCountryName() != null)
+				writer.print(router.getCountryName() + " (" + router.getAddress() + ")");
+			else
+				writer.print(router.getAddress());
+			writer.print("\"><img height=\"11\" width=\"16\" src=\"/flags.jsp?c=" +
+						 router.getCountryCode().toLowerCase().replace("--", "a0") + "\"></span><span class=\"nickname\"");
+
+
+			if (router.getPlatform() != null)
+				writer.print(" data-ipv4=\"" + router.getPlatform().replace("Tor ", "").replace(" on ", " / ") + "\"");
+			writer.print(">");
+
+			writer.print("<a class=\"script\" href=\"https://metrics.torproject.org/rs.html#search/" + idHash + "\" target=\"_blank\">" +
+						 router.getNickname() + "</a>" +
+
+						 // <noscript> alternative lookup
+						 "<noscript>" +
+						 "<a href=\"https://torstatus.blutmagie.de/router_detail.php?FP=" + idHash + "\" target=\"_blank\">" +
+						 router.getNickname() + "</a>" +
+						 "</noscript>" +
+
+						"</span><span class=\"hidden\"> (</span><b>" + router.getAddress() + "</b>" +
+						"<span class=\"hidden\">)</span></span><span class=\"hidden\">]</span></span> <span class=\"circuitcount\">" + circuitCount + "</span></td>");
+			writer.print("<td><span class=\"nowrap\">" + (getIdleMilliseconds() / 1000) + "s</span></td>");
+			writer.print("<td>");
+			long bw = router.getObservedBandwidth();
+			writer.print("<span class=\"nowrap\">");
+			if (bw > 0 && bw < 1048576)
+				writer.print((bw / 1024) + " KB/s");
+			else if (bw >= 1048576)
+				writer.print(((bw / 1024) / 1024) + " MB/s");
+			else
+				writer.print("unknown");
+			writer.print("</span></td>");
+			writer.print("<td><span class=\"nowrap\">");
+			int uptime = router.getUptime();
+			if (uptime > 172800)
+				writer.print((((uptime / 60) / 60) / 24) + " days");
+			else if (uptime > 7200)
+				writer.print(((uptime / 60) / 60) + " hours");
+			else if (uptime > 120)
+				writer.print(uptime / 60 + " mins");
+			else if (uptime > 0)
+				writer.print(uptime + " secs");
+			else
+				writer.print("unknown");
+			writer.print("</span></td></tr>\n");
+		}
 	}
 }

@@ -42,8 +42,8 @@ public class RouterStatusImpl implements RouterStatus {
 	void setRejectedPorts(String portList) { this.exitPorts = ExitPorts.createRejectExitPorts(portList); }
 	
 	public String toString() {
-		return "Router: ("+ nickname +" "+ identity +" "+ digest +" "+ address +" "+ routerPort +" " + directoryPort
-			+" "+ version +" "+ exitPorts +")";
+		return "Router: [" + nickname + " " + identity + " " + digest + " " + address + " " + routerPort + " " + directoryPort
+			+ " " + version + " " + exitPorts + "]";
 	}
 	public String getNickname() {
 		return nickname;

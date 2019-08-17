@@ -230,6 +230,8 @@ public class CircuitManagerImpl implements CircuitManager, DashboardRenderable {
 			throw new OpenFailedException("Hidden services not supported");
 		} else if(hostname.toLowerCase().endsWith(".exit")) {
 			throw new OpenFailedException(".exit addresses are not supported");
+		} else if (hostname.toLowerCase().endsWith(".i2p")) {
+			throw new OpenFailedException(".i2p addresses are not supported");
 		}
 	}
 	
@@ -336,13 +338,15 @@ public class CircuitManagerImpl implements CircuitManager, DashboardRenderable {
 		if((flags & DASHBOARD_CIRCUITS) == 0) {
 			return;
 		}
-		renderer.renderComponent(writer, flags, connectionCache);
-		renderer.renderComponent(writer, flags, circuitCreationTask.getCircuitPredictor());
-		writer.println("[Circuit Manager]");
-		writer.println();
+		writer.println("<table id=\"circuitmon\" width=\"100%\">\n<tr><th colspan=\"4\" align=\"left\">Circuit Monitor</th></tr>");
+		writer.println("<tr class=\"subtitle\"><th align=\"left\">Circuit ID</th><th align=\"left\">Type</th>" +
+					   "<th align=\"left\">State</th><th align=\"left\" width=\"50%\">Participants</th></tr>");
 		for(Circuit c: getCircuitsByFilter(null)) {
 			renderer.renderComponent(writer, flags, c);
 		}
+		writer.println("</table>\n</td></tr>");
+		renderer.renderComponent(writer, flags, connectionCache);
+		renderer.renderComponent(writer, flags, circuitCreationTask.getCircuitPredictor());
 	}
 
 	public InternalCircuit getCleanInternalCircuit() throws InterruptedException {

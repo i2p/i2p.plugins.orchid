@@ -26,8 +26,10 @@ import com.subgraph.orchid.data.exitpolicy.ExitTarget;
 
 public class CircuitCreationTask implements Runnable {
 	private final static Logger logger = Logger.getLogger(CircuitCreationTask.class.getName());
-	private final static int MAX_CIRCUIT_DIRTINESS = 300; // seconds
-	private final static int MAX_PENDING_CIRCUITS = 4;
+//	private final static int MAX_CIRCUIT_DIRTINESS = 300; // seconds
+	private final static int MAX_CIRCUIT_DIRTINESS = 600; // 10 minutes (Tor default)
+//	private final static int MAX_PENDING_CIRCUITS = 4;
+	private final static int MAX_PENDING_CIRCUITS = 32; // Tor default
 
 	private final TorConfig config;
 	private final Directory directory;
@@ -112,7 +114,7 @@ public class CircuitCreationTask implements Runnable {
 			}
 		});
 		for(Circuit c: circuits) {
-			logger.fine("Closing idle dirty circuit: "+ c);
+			logger.fine("Closing idle dirty circuit \n* CircuitID: " + c);
 			((CircuitImpl)c).markForClose();
 		}
 	}
@@ -124,7 +126,7 @@ public class CircuitCreationTask implements Runnable {
 
 		if(!directory.haveMinimumRouterInfo()) {
 			if(notEnoughDirectoryInformationWarningCounter % 20 == 0)
-				logger.info("Cannot build circuits because we don't have enough directory information");
+				logger.info("Not enough directory information to build circuits");
 			notEnoughDirectoryInformationWarningCounter++;
 			return;
 		}
@@ -228,7 +230,7 @@ public class CircuitCreationTask implements Runnable {
 		return new CircuitBuildHandler() {
 
 			public void circuitBuildCompleted(Circuit circuit) {
-				logger.fine("Circuit completed to: "+ circuit);
+				logger.fine("Built new circuit \n* CircuitID: " + circuit);
 				circuitOpenedHandler(circuit);
 				lastNewCircuit.set(System.currentTimeMillis());
 			}
@@ -270,7 +272,7 @@ public class CircuitCreationTask implements Runnable {
 		return new CircuitBuildHandler() {
 			
 			public void nodeAdded(CircuitNode node) {
-				logger.finer("Node added to internal circuit: "+ node);
+				logger.finer("Added " + node + " to internal circuit");
 			}
 			
 			public void connectionFailed(String reason) {
@@ -288,7 +290,7 @@ public class CircuitCreationTask implements Runnable {
 			}
 			
 			public void circuitBuildCompleted(Circuit circuit) {
-				logger.fine("Internal circuit build completed: "+ circuit);
+				logger.fine("Built new circuit \n* CircuitID: " + circuit);
 				lastNewCircuit.set(System.currentTimeMillis());
 				circuitManager.addCleanInternalCircuit((InternalCircuit) circuit);
 			}
