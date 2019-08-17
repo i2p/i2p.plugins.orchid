@@ -250,6 +250,9 @@ public class OrchidServlet extends BasicServlet {
         buf.append("<tr><td>Use NTor Handshake</td><td><code>").append(tc.getUseNTorHandshake()).append("</code></td><td>Use the ntor circuit-creation handshake</td></tr>\n");
         buf.append("<tr><td>Warn Unsafe Socks</td><td><code>").append(tc.getWarnUnsafeSocks()).append("</code></td><td>Warn when requests only provide ip address</td></tr>\n");
         buf.append("</table>\n</td></tr>\n</table>\n");
+        String useMds = String.valueOf(tc.getUseMicrodescriptors());
+        if (useMds.equals("AUTO") || useMds.equals("TRUE") || useMds.equals("true"))
+            buf.append("<style>.nickname:hover::after {display: none !important;}</style>\n");
         return buf.toString();
     }
 
