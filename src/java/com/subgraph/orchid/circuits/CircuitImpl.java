@@ -294,9 +294,10 @@ public abstract class CircuitImpl implements Circuit, DashboardRenderable {
 			if (r != null) {
 				String idHash = r.getIdentityHash().toString().toUpperCase();
 				int uptime = r.getUptime();
-				int bw = r.getObservedBandwidth();
+				long bw = r.getObservedBandwidth();
+				long bwEst = r.getEstimatedBandwidth();
 				sb.append("<span class=\"nickname");
-				if (r.getPlatform() != null || r.getUptime() > 0 || r.getObservedBandwidth() > 0)
+				if (r.getPlatform() != null || r.getUptime() > 0 || r.getObservedBandwidth() > 0 || r.getEstimatedBandwidth() > 0)
 					sb.append("\" data-ipv4=\"");
 
 				if (r.getPlatform() != null)
@@ -308,6 +309,11 @@ public abstract class CircuitImpl implements Circuit, DashboardRenderable {
 					sb.append((bw / 1024) + " KB/s");
 				else if (bw >= 1048576)
 					sb.append(((bw / 1024) / 1024) + " MB/s");
+				// useMicrodescriptors=true
+				else if (bwEst > 0 && bwEst < 2048)
+					sb.append(bwEst + " KB/s (estimated)");
+				else if (bwEst >= 2048)
+					sb.append((bwEst / 1024) + " MB/s (estimated)");
 
 				if (uptime > 0)
 					sb.append(" \u2022 Up: ");

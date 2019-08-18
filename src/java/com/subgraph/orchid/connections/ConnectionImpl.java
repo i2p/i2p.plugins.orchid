@@ -399,28 +399,44 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 						"<span class=\"hidden\">)</span></span><span class=\"hidden\">]</span></span> <span class=\"circuitcount\">" + circuitCount + "</span></td>");
 			writer.print("<td><span class=\"nowrap\">" + (getIdleMilliseconds() / 1000) + "s</span></td>");
 			writer.print("<td>");
+			String useMds = String.valueOf(this.config.getUseMicrodescriptors());
 			long bw = router.getObservedBandwidth();
+			long bwEst = router.getEstimatedBandwidth();
 			writer.print("<span class=\"nowrap\">");
-			if (bw > 0 && bw < 1048576)
-				writer.print((bw / 1024) + " KB/s");
-			else if (bw >= 1048576)
-				writer.print(((bw / 1024) / 1024) + " MB/s");
-			else
-				writer.print("unknown");
+			if (useMds.equals("AUTO") || useMds.equals("TRUE") || useMds.equals("true")) {
+				if (bwEst > 0 && bwEst < 2048)
+					writer.print(bwEst + " KB/s");
+				else if (bwEst >= 2048)
+					writer.print((bwEst / 1024) + " MB/s");
+				else
+					writer.print("unknown");
+			} else {
+				if (bw > 0 && bw < 1048576)
+					writer.print((bw / 1024) + " KB/s");
+				else if (bw >= 1048576)
+					writer.print(((bw / 1024) / 1024) + " MB/s");
+				else
+					writer.print("unknown");
+			}
 			writer.print("</span></td>");
-			writer.print("<td><span class=\"nowrap\">");
-			int uptime = router.getUptime();
-			if (uptime > 172800)
-				writer.print((((uptime / 60) / 60) / 24) + " days");
-			else if (uptime > 7200)
-				writer.print(((uptime / 60) / 60) + " hours");
-			else if (uptime > 120)
-				writer.print(uptime / 60 + " mins");
-			else if (uptime > 0)
-				writer.print(uptime + " secs");
-			else
-				writer.print("unknown");
-			writer.print("</span></td></tr>\n");
+			if (useMds.equals("AUTO") || useMds.equals("TRUE") || useMds.equals("true")) {
+				writer.print("<!-- useMicroDescriptors=TRUE, not showing uptime column -->");
+			} else {
+				writer.print("<td><span class=\"nowrap\">");
+				int uptime = router.getUptime();
+				if (uptime > 172800)
+					writer.print((((uptime / 60) / 60) / 24) + " days");
+				else if (uptime > 7200)
+					writer.print(((uptime / 60) / 60) + " hours");
+				else if (uptime > 120)
+					writer.print(uptime / 60 + " mins");
+				else if (uptime > 0)
+					writer.print(uptime + " secs");
+				else
+					writer.print("unknown");
+				writer.print("</span></td>");
+			}
+			writer.print("</tr>\n");
 		}
 	}
 }

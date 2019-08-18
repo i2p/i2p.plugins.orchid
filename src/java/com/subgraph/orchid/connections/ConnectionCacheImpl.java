@@ -184,13 +184,21 @@ public class ConnectionCacheImpl implements ConnectionCache, DashboardRenderable
 
 	private void printDashboardBanner(PrintWriter writer, int flags) {
 		final boolean verbose = (flags & DASHBOARD_CONNECTIONS_VERBOSE) != 0;
-		writer.print("<hr>\n<table id=\"conncache\" width=\"100%\">\n" +
-					 "<tr><th colspan=\"5\" align=\"left\">Connection Cache</th></tr>\n<tr class=\"subtitle\">" +
+		String useMds = String.valueOf(this.config.getUseMicrodescriptors());
+		writer.print("<hr>\n<table id=\"conncache\" width=\"100%\">\n");
+		if (useMds.equals("AUTO") || useMds.equals("TRUE") || useMds.equals("true")) {
+			writer.print("<tr><th colspan=\"3\" align=\"left\">Connection Cache</th></tr>\n<tr class=\"subtitle\">" +
+						 "<th align=\"left\" width=\"33%\">Guard Node <span title=\"Circuits available for immediate use\">(Circuits)</span></th>" +
+						 "<th align=\"left\" width=\"34%\">Idle</th>" +
+						 "<th align=\"left\" width=\"33%\" title=\"Estimated node bandwidth\">Bandwidth</th>");
+		} else {
+			writer.print("<tr><th colspan=\"4\" align=\"left\">Connection Cache</th></tr>\n<tr class=\"subtitle\">" +
 					 "<th align=\"left\" width=\"25%\">Guard Node <span title=\"Circuits available for immediate use\">(Circuits)</span></th>" +
 					 "<th align=\"left\" width=\"25%\">Idle</th>" +
 					 "<th align=\"left\" width=\"25%\" title=\"Observed node bandwidth\">Bandwidth</th>" +
-					 "<th align=\"left\" width=\"25%\">Uptime</th>" +
-					 "</tr>\n");
+					 "<th align=\"left\" width=\"25%\">Uptime</th>");
+		}
+		writer.print("</tr>\n");
 	}
 
 	List<Connection> getActiveConnections() {

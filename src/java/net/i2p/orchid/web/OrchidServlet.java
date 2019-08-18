@@ -143,7 +143,7 @@ public class OrchidServlet extends BasicServlet {
         out.write("<body id=\"orchid\" onload=\"hideConfig();\">\n<div id=\"container\">\n<table id=\"main\" width=\"100%\">\n" +
                   "<thead><tr><th id=\"title\" align=\"left\">Orchid Tor Client</th></tr></thead>\n");
         out.write("<tbody>\n<tr><td>\n<hr>\n<table id=\"status\" width=\"100%\">\n<tr class=\"subtitle\">" +
-                  "<th width=\"33%\">Status</th><th width=\"33%\">Registered with I2P</th><th width=\"33%\">Plugin Version</th></tr>\n");
+                  "<th width=\"33%\">Status</th><th width=\"34%\">Registered with I2P</th><th width=\"33%\">Plugin Version</th></tr>\n");
         out.write("<tr><td align=\"center\">");
         OrchidController c = _manager;
         String status = c.getState().toString();
