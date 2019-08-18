@@ -252,7 +252,7 @@ public class OrchidServlet extends BasicServlet {
         buf.append("</table>\n</td></tr>\n</table>\n");
         String useMds = String.valueOf(tc.getUseMicrodescriptors());
         if (useMds.equals("AUTO") || useMds.equals("TRUE") || useMds.equals("true"))
-            buf.append("<style>.nickname:hover::after {display: none !important;}</style>\n");
+            buf.append("<style>#conncache .nickname:hover::after {display: none !important;}</style>\n");
         return buf.toString();
     }
 

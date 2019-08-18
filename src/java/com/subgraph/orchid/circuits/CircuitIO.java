@@ -121,7 +121,7 @@ public class CircuitIO implements DashboardRenderable {
 	}
 	
 	private void processDestroyCell(int reason) {
-		logger.fine("DESTROY cell received ("+ CellImpl.errorToDescription(reason) +") on "+ circuit);
+		logger.fine("DESTROY cell received on " + circuit + CellImpl.errorToDescription(reason));
 		destroyCircuit();
 	}
 
