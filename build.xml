@@ -11,7 +11,7 @@
     <target name="plugin" depends="war"> 
         <!-- get version number -->
         <buildnumber file="scripts/build.number" />
-        <property name="release.number" value="1.2.2-0.5" />
+        <property name="release.number" value="1.2.2-0.6" />
 
         <!-- add the GeoIP.dat file & README.txt -->
         <copy file="geoip/GeoIP.dat" todir="plugin/geoip/" overwrite="true" />

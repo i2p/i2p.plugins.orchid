@@ -1,4 +1,4 @@
-* 2019-08-xx 1.2.2-0.6
+* 2019-08-21 1.2.2-0.6
  - Overhaul front-end to use full html output and a default light theme
  - Enable GeoIP lookups for nodes to permit display of flags
  - Add country code lookups for nodes and display on tooltip
@@ -9,6 +9,7 @@
  - Display platform, observed bandwidth and uptime on circuit node tooltips
  - Add hints and notes to config section, and include missing options
  - Change maxCircuitDirtiness to Tor default of 10 minutes
+ - Update dizum dirauth IP
 
 * 2019-06-24 1.2.2-0.5
   - Remove unused XMLRPC Transport and related libs
