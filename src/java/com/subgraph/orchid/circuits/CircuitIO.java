@@ -267,7 +267,7 @@ public class CircuitIO implements DashboardRenderable {
 	}
 
 	private void closeCircuit() {
-		logger.fine("Closing circuit "+ circuit);
+		logger.fine("Closing CircuitID="+ circuit);
 		sendDestroyCell(Cell.ERROR_NONE);
 		connection.removeCircuit(circuit);
 		circuit.setStateDestroyed();
